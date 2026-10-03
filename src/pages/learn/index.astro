@@ -1,0 +1,173 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { ARTICLES } from '../../data/articles';
+
+const canonicalUrl = 'https://numforge.online/learn/';
+
+const learnIndexSchema = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'CollectionPage',
+      '@id': `${canonicalUrl}#collection`,
+      'name': 'NumForge Learning Center — Number Systems, Binary Arithmetic & Digital Logic',
+      'url': canonicalUrl,
+      'description': 'Authoritative engineering guides and tutorials on number systems, decimal to binary conversions, hexadecimal math, Two’s Complement, and digital logic design.',
+      'mainEntity': {
+        '@type': 'ItemList',
+        'itemListElement': ARTICLES.map((a, index) => ({
+          '@type': 'ListItem',
+          'position': index + 1,
+          'name': a.title,
+          'url': `https://numforge.online/learn/${a.slug}/`
+        }))
+      }
+    },
+    {
+      '@type': 'BreadcrumbList',
+      '@id': `${canonicalUrl}#breadcrumb`,
+      'itemListElement': [
+        {
+          '@type': 'ListItem',
+          'position': 1,
+          'name': 'Home',
+          'item': 'https://numforge.online/'
+        },
+        {
+          '@type': 'ListItem',
+          'position': 2,
+          'name': 'Learn',
+          'item': canonicalUrl
+        }
+      ]
+    }
+  ]
+};
+---
+
+<Layout
+  title="Learn Computer Architecture & Number Systems | NumForge"
+  description="Master binary conversions, hexadecimal transformations, Two’s Complement arithmetic, and digital logic gate design with step-by-step engineering guides."
+  canonical={canonicalUrl}
+  schema={learnIndexSchema}
+>
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-16 space-y-12">
+    <!-- Breadcrumb Header -->
+    <nav class="flex items-center gap-2 text-xs sm:text-sm text-[#7a7a7a]" aria-label="Breadcrumb">
+      <a href="/" class="hover:text-[#1d1d1f] transition-colors">Home</a>
+      <span>/</span>
+      <span class="text-[#1d1d1f] font-semibold">Learn</span>
+    </nav>
+
+    <!-- Header Hero -->
+    <div class="text-center max-w-3xl mx-auto space-y-4">
+      <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs sm:text-sm font-medium bg-[#f5f5f7] border border-[#e0e0e0] text-[#1d1d1f]">
+        <span>Knowledge Base &bull; {ARTICLES.length} Comprehensive Engineering Guides</span>
+      </div>
+
+      <h1 class="font-display font-semibold text-4xl sm:text-6xl text-[#1d1d1f] tracking-tight leading-tight">
+        Computer Architecture & Number Systems
+      </h1>
+
+      <p class="text-lg sm:text-xl text-[#7a7a7a] leading-relaxed">
+        Deep technical tutorials on radix conversions, binary arithmetic, two’s complement signed representation, and digital logic synthesis.
+      </p>
+    </div>
+
+    <!-- Quick Filter Search Bar -->
+    <div class="max-w-xl mx-auto">
+      <div class="relative flex items-center">
+        <div class="absolute left-4 text-[#7a7a7a] pointer-events-none">
+          <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+          </svg>
+        </div>
+        <input
+          type="text"
+          id="articles-search"
+          placeholder="Search engineering articles (e.g. binary, hexadecimal, 2's complement)..."
+          class="w-full pl-11 pr-4 py-3 rounded-full bg-[#f5f5f7] border border-[#e0e0e0] text-sm sm:text-base text-[#1d1d1f] placeholder-[#7a7a7a] focus:bg-white focus:outline-none focus:border-[#0066cc] shadow-xs"
+        />
+      </div>
+    </div>
+
+    <!-- Articles Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="articles-grid">
+      {ARTICLES.map((article) => (
+        <article
+          class="article-card relative flex flex-col justify-between p-7 rounded-[22px] bg-white border border-[#e0e0e0] hover:border-[#b0b0b5] hover:shadow-[0_4px_24px_rgba(0,0,0,0.06)] transition-all duration-200 group"
+          data-title={article.title.toLowerCase()}
+          data-category={article.category.toLowerCase()}
+          data-summary={article.summary.toLowerCase()}
+        >
+          <div>
+            <div class="flex items-center justify-between gap-2 mb-3">
+              <span class="text-xs font-semibold uppercase tracking-wider text-[#0066cc] bg-[#f5f5f7] px-2.5 py-0.5 rounded-md border border-[#e0e0e0]">
+                {article.category}
+              </span>
+              <span class="text-xs text-[#7a7a7a]">
+                {article.readTime}
+              </span>
+            </div>
+
+            <h2 class="font-display font-semibold text-xl sm:text-2xl text-[#1d1d1f] group-hover:text-[#0066cc] transition-colors leading-snug mb-2.5">
+              <a href={`/learn/${article.slug}/`} class="focus:outline-none after:absolute after:inset-0">
+                {article.title}
+              </a>
+            </h2>
+
+            <p class="text-sm sm:text-base text-[#7a7a7a] leading-relaxed line-clamp-3 mb-6">
+              {article.summary}
+            </p>
+          </div>
+
+          <div class="pt-4 border-t border-[#f0f0f0] flex items-center justify-between text-sm">
+            <span class="text-xs text-[#7a7a7a]">Full Guide with Proofs</span>
+            <span class="font-semibold text-[#0066cc] group-hover:translate-x-0.5 transition-transform flex items-center gap-1">
+              Read Guide &rarr;
+            </span>
+          </div>
+        </article>
+      ))}
+    </div>
+
+    <!-- Back to Tools Banner -->
+    <div class="bg-[#f5f5f7] rounded-[24px] border border-[#e0e0e0] p-8 sm:p-10 text-center space-y-4">
+      <h3 class="font-display font-semibold text-2xl sm:text-3xl text-[#1d1d1f]">
+        Looking for Instant Calculation Tools?
+      </h3>
+      <p class="text-base text-[#7a7a7a] max-w-xl mx-auto">
+        Verify your homework and firmware designs using our deterministic suite of 137 client-side calculators.
+      </p>
+      <div class="pt-2">
+        <a href="/tools/" class="inline-flex items-center justify-center px-7 py-3 rounded-full text-sm font-semibold bg-[#0066cc] text-white hover:bg-[#0071e3] transition-colors">
+          Browse All 137 Tools &rarr;
+        </a>
+      </div>
+    </div>
+  </div>
+</Layout>
+
+<script>
+  function setupArticleSearch() {
+    const input = document.getElementById('articles-search') as HTMLInputElement | null;
+    const cards = document.querySelectorAll('.article-card') as NodeListOf<HTMLElement>;
+
+    input?.addEventListener('input', (e) => {
+      const q = (e.target as HTMLInputElement).value.trim().toLowerCase();
+      cards.forEach((card) => {
+        const title = card.getAttribute('data-title') || '';
+        const cat = card.getAttribute('data-category') || '';
+        const summary = card.getAttribute('data-summary') || '';
+        if (!q || title.includes(q) || cat.includes(q) || summary.includes(q)) {
+          card.style.display = 'flex';
+        } else {
+          card.style.display = 'none';
+        }
+      });
+    });
+  }
+
+  setupArticleSearch();
+  document.addEventListener('astro:page-load', setupArticleSearch);
+</script>

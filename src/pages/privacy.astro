@@ -1,0 +1,62 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout
+  title="Privacy Policy — NumForge"
+  description="NumForge privacy policy. Learn how our 100% client-side calculation architecture safeguards your data with zero tracking."
+  canonical="https://numforge.online/privacy"
+>
+  <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-24 space-y-10">
+    <div class="space-y-3">
+      <span class="text-xs sm:text-sm font-semibold uppercase tracking-wider text-[#0066cc] block">Legal</span>
+      <h1 class="font-display font-semibold text-4xl sm:text-5xl text-[#1d1d1f] tracking-tight">
+        Privacy Policy
+      </h1>
+      <p class="text-sm sm:text-base text-[#7a7a7a]">Last updated: October 2026</p>
+    </div>
+
+    <!-- Apple Highlight Callout -->
+    <div class="p-7 rounded-[22px] bg-[#f5f5f7] border border-[#e0e0e0] space-y-2.5">
+      <h3 class="font-display font-semibold text-xl sm:text-2xl text-[#1d1d1f]">Zero-Knowledge Computation Guarantee</h3>
+      <p class="text-base sm:text-lg text-[#7a7a7a] leading-relaxed">
+        NumForge was designed specifically to guarantee privacy. Every number conversion, binary operation, and logic simulation runs exclusively inside your local browser memory sandbox. Your inputs and values are never transmitted to our servers or third parties.
+      </p>
+    </div>
+
+    <div class="space-y-8 text-[#333333] text-base sm:text-lg leading-relaxed">
+      <section class="space-y-2.5">
+        <h2 class="font-display font-semibold text-2xl text-[#1d1d1f]">1. Information We Do Not Collect</h2>
+        <p class="text-base sm:text-lg text-[#333333]">
+          NumForge does not require user accounts or credentials. We do not collect or log:
+        </p>
+        <ul class="list-disc pl-6 space-y-2 text-base sm:text-lg text-[#333333]">
+          <li>Numerical inputs, base parameters, or arithmetic operations</li>
+          <li>Cryptographic keys, binary registers, or IEEE-754 mantissa calculations</li>
+          <li>Personal identifying credentials, names, or addresses</li>
+        </ul>
+      </section>
+
+      <section class="space-y-2.5">
+        <h2 class="font-display font-semibold text-2xl text-[#1d1d1f]">2. Local Client-Side State</h2>
+        <p class="text-base sm:text-lg text-[#333333]">
+          Optional client conveniences (such as preserving selected bit widths) are saved solely in your local browser session. This data never leaves your device and can be cleared at any time via your browser settings.
+        </p>
+      </section>
+
+      <section class="space-y-2.5">
+        <h2 class="font-display font-semibold text-2xl text-[#1d1d1f]">3. Infrastructure and Hosting</h2>
+        <p class="text-base sm:text-lg text-[#333333]">
+          NumForge static assets are served through Content Delivery Networks. Ephemeral HTTP request headers (IP address and timestamp) are processed briefly by edge firewalls strictly for DDoS defense before being discarded.
+        </p>
+      </section>
+
+      <section class="space-y-2.5">
+        <h2 class="font-display font-semibold text-2xl text-[#1d1d1f]">4. Contact</h2>
+        <p class="text-base sm:text-lg text-[#333333]">
+          For privacy inquiries, contact: <a href="mailto:privacy@numforge.online" class="text-[#0066cc] hover:underline font-mono">privacy@numforge.online</a>
+        </p>
+      </section>
+    </div>
+  </div>
+</Layout>

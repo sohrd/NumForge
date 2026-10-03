@@ -1,0 +1,96 @@
+---
+import Layout from '../layouts/Layout.astro';
+import CtaBand from '../components/CtaBand.astro';
+
+const aboutSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'AboutPage',
+  'name': 'About NumForge',
+  'url': 'https://numforge.online/about',
+  'description': 'NumForge is an open-access number systems and digital electronics workbench built for students, software engineers, and hardware architects.',
+  'mainEntity': {
+    '@type': 'Organization',
+    'name': 'NumForge',
+    'url': 'https://numforge.online',
+    'logo': 'https://numforge.online/favicon.svg'
+  }
+};
+---
+
+<Layout
+  title="About NumForge — Our Mission, Architecture & Standards"
+  description="Learn why NumForge was created: to provide zero-latency, privacy-first, educational number system conversions, binary arithmetic, and digital logic tools."
+  canonical="https://numforge.online/about"
+  schema={aboutSchema}
+>
+  <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-24 space-y-14">
+    <!-- Header -->
+    <div class="space-y-4">
+      <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs sm:text-sm font-semibold bg-[#f5f5f7] border border-[#e0e0e0] text-[#1d1d1f]">
+        <span>About NumForge</span>
+      </div>
+      <h1 class="font-display font-semibold text-4xl sm:text-6xl text-[#1d1d1f] tracking-tight leading-tight">
+        Precision digital tools. Crafted for engineers and curious minds.
+      </h1>
+      <p class="text-xl sm:text-2xl text-[#7a7a7a] leading-relaxed">
+        NumForge was built to solve a pervasive problem: online number conversion and computer arithmetic tools were cluttered with ads, unresponsive, and devoid of educational transparency.
+      </p>
+    </div>
+
+    <!-- Core Tenets (Apple Clean Cards) -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div class="p-7 rounded-[22px] bg-[#f5f5f7] border border-[#e0e0e0] space-y-3">
+        <span class="text-xs font-semibold uppercase tracking-wider text-[#0066cc]">Pillar 1</span>
+        <h3 class="font-display font-semibold text-2xl text-[#1d1d1f]">Pedagogical Transparency</h3>
+        <p class="text-sm sm:text-base text-[#7a7a7a] leading-relaxed">
+          We don't believe in opaque black boxes. Every calculation reveals its mathematical mechanics: powers of radix, binary carries, remainder tracking, and truth table permutations.
+        </p>
+      </div>
+
+      <div class="p-7 rounded-[22px] bg-[#f5f5f7] border border-[#e0e0e0] space-y-3">
+        <span class="text-xs font-semibold uppercase tracking-wider text-[#0066cc]">Pillar 2</span>
+        <h3 class="font-display font-semibold text-2xl text-[#1d1d1f]">Absolute Privacy & Zero Tracking</h3>
+        <p class="text-sm sm:text-base text-[#7a7a7a] leading-relaxed">
+          Hardware engineers frequently test sensitive binary masks and memory layouts. All NumForge calculations execute 100% inside your client device's browser memory sandbox.
+        </p>
+      </div>
+
+      <div class="p-7 rounded-[22px] bg-[#f5f5f7] border border-[#e0e0e0] space-y-3">
+        <span class="text-xs font-semibold uppercase tracking-wider text-[#0066cc]">Pillar 3</span>
+        <h3 class="font-display font-semibold text-2xl text-[#1d1d1f]">0ms Client-Side Computation</h3>
+        <p class="text-sm sm:text-base text-[#7a7a7a] leading-relaxed">
+          Powered by lightweight modern JavaScript and native browser APIs. No server roundtrips, no loading spinners, and instantaneous recalculations as you type.
+        </p>
+      </div>
+
+      <div class="p-7 rounded-[22px] bg-[#f5f5f7] border border-[#e0e0e0] space-y-3">
+        <span class="text-xs font-semibold uppercase tracking-wider text-[#0066cc]">Pillar 4</span>
+        <h3 class="font-display font-semibold text-2xl text-[#1d1d1f]">Arbitrary BigInt Precision</h3>
+        <p class="text-sm sm:text-base text-[#7a7a7a] leading-relaxed">
+          Standard web calculators suffer from IEEE-754 double precision integer overflow above 53 bits. NumForge employs arbitrary-precision BigInt to guarantee exact mathematical answers.
+        </p>
+      </div>
+    </div>
+
+    <!-- Editorial Story -->
+    <div class="bg-white border border-[#e0e0e0] rounded-[22px] p-8 sm:p-12 space-y-5 text-[#333333] text-lg sm:text-xl leading-relaxed">
+      <h2 class="font-display font-semibold text-3xl text-[#1d1d1f]">The NumForge Standards</h2>
+      <p>
+        In computer science lecture halls and electrical engineering labs around the world, students and engineers daily wrestle with binary conversion, signed integer representations (One’s vs Two’s Complement), and IEEE-754 floating-point errors.
+      </p>
+      <p>
+        NumForge was built to set a modern benchmark: clean aesthetic restraint inspired by Apple's revered museum-gallery design, instant client-side execution, and rigorous mathematical correctness.
+      </p>
+      <div class="pt-6 border-t border-[#f0f0f0] flex flex-wrap items-center justify-between gap-4 text-sm sm:text-base text-[#7a7a7a]">
+        <div>
+          <strong class="text-[#1d1d1f]">Stack:</strong> Astro 5+, Tailwind CSS v4, TypeScript
+        </div>
+        <div>
+          <strong class="text-[#1d1d1f]">Execution:</strong> 100% In-Browser &bull; Zero Server Roundtrips
+        </div>
+      </div>
+    </div>
+
+    <CtaBand />
+  </div>
+</Layout>

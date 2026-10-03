@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://numforge.online/sitemap.xml
+Sitemap: https://numforge.online/sitemap-index.xml

@@ -1,0 +1,266 @@
+---
+import Layout from '../layouts/Layout.astro';
+import ToolWorkbench from '../components/ToolWorkbench.astro';
+import { ALL_TOOLS, getToolBySlug, getRelatedTools } from '../data/allTools';
+
+export function getStaticPaths() {
+  return ALL_TOOLS.map((tool) => ({
+    params: { slug: tool.slug },
+    props: { tool }
+  }));
+}
+
+const { tool } = Astro.props;
+
+if (!tool) {
+  return Astro.redirect('/404');
+}
+
+const relatedTools = getRelatedTools(tool);
+
+// Schema.org WebApplication + FAQPage + BreadcrumbList
+const canonicalUrl = `https://numforge.online/${tool.slug}/`;
+
+const toolSchema = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'WebApplication',
+      '@id': `${canonicalUrl}#software`,
+      'name': tool.name,
+      'url': canonicalUrl,
+      'description': tool.shortDesc,
+      'applicationCategory': 'UtilitiesApplication',
+      'operatingSystem': 'All',
+      'browserRequirements': 'Requires JavaScript. Requires HTML5.',
+      'offers': {
+        '@type': 'Offer',
+        'price': '0',
+        'priceCurrency': 'USD'
+      }
+    },
+    {
+      '@type': 'BreadcrumbList',
+      '@id': `${canonicalUrl}#breadcrumb`,
+      'itemListElement': [
+        {
+          '@type': 'ListItem',
+          'position': 1,
+          'name': 'Home',
+          'item': 'https://numforge.online/'
+        },
+        {
+          '@type': 'ListItem',
+          'position': 2,
+          'name': tool.categoryName,
+          'item': `https://numforge.online/tools/${tool.categorySlug}/`
+        },
+        {
+          '@type': 'ListItem',
+          'position': 3,
+          'name': tool.name,
+          'item': canonicalUrl
+        }
+      ]
+    },
+    {
+      '@type': 'FAQPage',
+      '@id': `${canonicalUrl}#faq`,
+      'mainEntity': tool.faqs.map((faq) => ({
+        '@type': 'Question',
+        'name': faq.question,
+        'acceptedAnswer': {
+          '@type': 'Answer',
+          'text': `<p>${faq.answer}</p>`
+        }
+      }))
+    }
+  ]
+};
+---
+
+<Layout
+  title={`${tool.metaTitle} | NumForge`}
+  description={tool.metaDesc}
+  canonical={canonicalUrl}
+  schema={toolSchema}
+>
+  <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-16 space-y-12">
+    <!-- Breadcrumb Header -->
+    <nav class="flex items-center gap-2 text-xs sm:text-sm text-[#7a7a7a]" aria-label="Breadcrumb">
+      <a href="/" class="hover:text-[#1d1d1f] transition-colors">Home</a>
+      <span>/</span>
+      <a href={`/tools/${tool.categorySlug}/`} class="hover:text-[#1d1d1f] transition-colors">
+        {tool.categoryName}
+      </a>
+      <span>/</span>
+      <span class="text-[#1d1d1f] font-semibold truncate">{tool.name}</span>
+    </nav>
+
+    <!-- Tool Title & Introduction -->
+    <div class="space-y-4 max-w-4xl">
+      <div class="flex flex-wrap items-center gap-2.5">
+        <a
+          href={`/tools/${tool.categorySlug}/`}
+          class="px-3 py-1 rounded-full text-xs font-semibold bg-[#f5f5f7] border border-[#e0e0e0] text-[#1d1d1f] hover:border-[#1d1d1f] transition-colors"
+        >
+          {tool.categoryName}
+        </a>
+        <span class="px-3 py-1 rounded-full text-xs font-semibold bg-[#0066cc] text-white">
+          Free Interactive Tool
+        </span>
+      </div>
+
+      <h1 class="font-display font-semibold text-3xl sm:text-5xl lg:text-6xl text-[#1d1d1f] tracking-tight leading-tight">
+        {tool.name}
+      </h1>
+
+      <p class="text-lg sm:text-xl text-[#7a7a7a] leading-relaxed">
+        {tool.shortDesc} Designed for software developers, electrical engineers, students, and computer architecture researchers requiring deterministic client-side accuracy.
+      </p>
+    </div>
+
+    <!-- MAIN FUNCTIONAL CALCULATOR INTERFACE -->
+    <ToolWorkbench tool={tool} />
+
+    <!-- DEEP EDUCATIONAL & TECHNICAL CONTENT SECTION -->
+    <div class="space-y-10 text-[#333333] leading-relaxed text-base sm:text-lg">
+      <!-- What Is [Concept]? -->
+      <section class="bg-[#f5f5f7] border border-[#e0e0e0] rounded-[24px] p-6 sm:p-10 space-y-3">
+        <span class="text-xs sm:text-sm font-semibold uppercase tracking-wider text-[#0066cc] block">Concept</span>
+        <h2 class="font-display font-semibold text-2xl sm:text-3xl text-[#1d1d1f] tracking-tight">
+          What Is {tool.name}?
+        </h2>
+        <p>{tool.whatIs}</p>
+      </section>
+
+      <!-- How Does It Work? -->
+      <section class="bg-white border border-[#e0e0e0] rounded-[24px] p-6 sm:p-10 space-y-3">
+        <span class="text-xs sm:text-sm font-semibold uppercase tracking-wider text-[#0066cc] block">Methodology</span>
+        <h2 class="font-display font-semibold text-2xl sm:text-3xl text-[#1d1d1f] tracking-tight">
+          How Does It Work?
+        </h2>
+        <p>{tool.howItWorks}</p>
+      </section>
+
+      <!-- Formula / Method & Worked Example -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="bg-[#f5f5f7] border border-[#e0e0e0] rounded-[24px] p-6 sm:p-8 space-y-3">
+          <span class="text-xs font-semibold uppercase tracking-wider text-[#0066cc] block">Formula & Rules</span>
+          <h3 class="font-display font-semibold text-xl text-[#1d1d1f]">Mathematical Algorithm</h3>
+          <div class="p-4 rounded-xl bg-white border border-[#e0e0e0] font-mono text-xs sm:text-sm text-[#1d1d1f] overflow-x-auto">
+            {tool.formula}
+          </div>
+        </div>
+
+        <div class="bg-[#f5f5f7] border border-[#e0e0e0] rounded-[24px] p-6 sm:p-8 space-y-3">
+          <span class="text-xs font-semibold uppercase tracking-wider text-[#0066cc] block">Worked Problem</span>
+          <h3 class="font-display font-semibold text-xl text-[#1d1d1f]">Step-by-Step Example</h3>
+          <div class="p-4 rounded-xl bg-white border border-[#e0e0e0] font-mono text-xs sm:text-sm text-[#1d1d1f] overflow-x-auto whitespace-pre-wrap">
+            {tool.example}
+          </div>
+        </div>
+      </div>
+
+      <!-- Important Rules -->
+      <section class="bg-white border border-[#e0e0e0] rounded-[24px] p-6 sm:p-10 space-y-4">
+        <h2 class="font-display font-semibold text-2xl sm:text-3xl text-[#1d1d1f] tracking-tight">
+          Important Rules & Edge Cases
+        </h2>
+        <ul class="list-disc pl-6 space-y-2 text-[#7a7a7a]">
+          {tool.rules.map((rule) => (
+            <li><strong class="text-[#1d1d1f]">{rule}</strong></li>
+          ))}
+        </ul>
+      </section>
+
+      <!-- Practical Applications -->
+      <section class="bg-[#f5f5f7] border border-[#e0e0e0] rounded-[24px] p-6 sm:p-10 space-y-4">
+        <h2 class="font-display font-semibold text-2xl sm:text-3xl text-[#1d1d1f] tracking-tight">
+          Practical Applications in Engineering
+        </h2>
+        <ul class="list-disc pl-6 space-y-2 text-[#7a7a7a]">
+          {tool.applications.map((app) => (
+            <li><span class="text-[#1d1d1f]">{app}</span></li>
+          ))}
+        </ul>
+      </section>
+
+      <!-- Common Mistakes -->
+      <section class="bg-white border border-[#e0e0e0] rounded-[24px] p-6 sm:p-10 space-y-4">
+        <h2 class="font-display font-semibold text-2xl sm:text-3xl text-[#1d1d1f] tracking-tight">
+          Common Mistakes to Avoid
+        </h2>
+        <ul class="list-disc pl-6 space-y-2 text-[#7a7a7a]">
+          {tool.mistakes.map((mistake) => (
+            <li><span class="text-[#d70015] font-semibold">Caution:</span> {mistake}</li>
+          ))}
+        </ul>
+      </section>
+
+      <!-- Frequently Asked Questions -->
+      <section class="bg-[#f5f5f7] border border-[#e0e0e0] rounded-[24px] p-6 sm:p-10 space-y-6">
+        <div class="space-y-1">
+          <span class="text-xs sm:text-sm font-semibold uppercase tracking-wider text-[#0066cc] block">FAQ</span>
+          <h2 class="font-display font-semibold text-2xl sm:text-3xl text-[#1d1d1f] tracking-tight">
+            Frequently Asked Questions
+          </h2>
+        </div>
+
+        <div class="space-y-3">
+          {tool.faqs.map((faq) => (
+            <details class="group bg-white border border-[#e0e0e0] rounded-2xl overflow-hidden hover:border-[#b0b0b5] transition-colors">
+              <summary class="flex items-center justify-between gap-4 p-5 cursor-pointer list-none select-none font-display font-medium text-base sm:text-lg text-[#1d1d1f]">
+                <span>{faq.question}</span>
+                <span class="w-6 h-6 rounded-full bg-[#f5f5f7] flex items-center justify-center shrink-0 group-open:rotate-180 transition-transform duration-200">
+                  <svg class="w-3.5 h-3.5 text-[#7a7a7a]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                  </svg>
+                </span>
+              </summary>
+              <div class="px-5 pb-5 text-[#7a7a7a] text-sm sm:text-base leading-relaxed border-t border-[#f0f0f0] pt-3">
+                <p>{faq.answer}</p>
+              </div>
+            </details>
+          ))}
+        </div>
+      </section>
+
+      <!-- Related Tools -->
+      {relatedTools.length > 0 && (
+        <section class="space-y-4 pt-4">
+          <div class="flex items-center justify-between">
+            <h2 class="font-display font-semibold text-2xl text-[#1d1d1f]">Related Tools</h2>
+            <a href={`/tools/${tool.categorySlug}/`} class="text-xs sm:text-sm font-semibold text-[#0066cc] hover:underline">
+              View All {tool.categoryName} &rarr;
+            </a>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {relatedTools.map((rel) => (
+              <a
+                href={`/${rel.slug}/`}
+                class="p-5 rounded-2xl bg-white border border-[#e0e0e0] hover:border-[#b0b0b5] hover:shadow-xs transition-all group flex flex-col justify-between"
+              >
+                <div>
+                  <span class="text-[11px] font-semibold uppercase tracking-wider text-[#7a7a7a] mb-1 block">
+                    {rel.categoryName}
+                  </span>
+                  <h3 class="font-display font-semibold text-base sm:text-lg text-[#1d1d1f] group-hover:text-[#0066cc] transition-colors mb-1">
+                    {rel.name}
+                  </h3>
+                  <p class="text-xs sm:text-sm text-[#7a7a7a] line-clamp-2">
+                    {rel.shortDesc}
+                  </p>
+                </div>
+                <span class="text-xs sm:text-sm font-semibold text-[#0066cc] mt-4 flex items-center gap-1">
+                  Open Tool &rarr;
+                </span>
+              </a>
+            ))}
+          </div>
+        </section>
+      )}
+    </div>
+  </div>
+</Layout>

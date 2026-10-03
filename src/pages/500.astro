@@ -1,0 +1,42 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout
+  title="500 — System Error | NumForge"
+  description="An unexpected error occurred during execution."
+>
+  <div class="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-20 sm:py-32 text-center space-y-8">
+    <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs sm:text-sm font-semibold bg-[#f5f5f7] border border-[#e0e0e0] text-[#1d1d1f]">
+      <span>Status 500</span>
+    </div>
+
+    <div class="font-display font-semibold text-7xl sm:text-9xl text-[#1d1d1f] tracking-tight">
+      500
+    </div>
+
+    <div class="space-y-3">
+      <h1 class="font-display font-semibold text-3xl sm:text-4xl text-[#1d1d1f]">
+        An unexpected error occurred.
+      </h1>
+      <p class="text-base sm:text-lg text-[#7a7a7a] max-w-md mx-auto">
+        Please reload the page or return to the main tools directory.
+      </p>
+    </div>
+
+    <div class="pt-4 flex flex-wrap items-center justify-center gap-4">
+      <button
+        onclick="window.location.reload()"
+        class="apple-btn-primary"
+      >
+        Reload Page
+      </button>
+      <a
+        href="/"
+        class="apple-btn-secondary"
+      >
+        Return to Home
+      </a>
+    </div>
+  </div>
+</Layout>

@@ -1,0 +1,202 @@
+---
+import { ALL_FAQS, FAQ_SCHEMA } from '../data/faqs';
+
+const categories = [
+  'All',
+  'Fundamentals',
+  'Conversions',
+  'Arithmetic & Complements',
+  'Digital Logic & Architecture',
+  'Encodings & Standards'
+] as const;
+---
+
+<!-- Schema.org FAQPage JSON-LD Structured Data for Google Rich Snippets -->
+<script type="application/ld+json" set:html={JSON.stringify(FAQ_SCHEMA)} />
+
+<div class="max-w-4xl mx-auto space-y-6" id="faq-section-wrapper">
+  <!-- FAQ Header Controls: Search, Category Filters, Expand/Collapse -->
+  <div class="space-y-4">
+    <!-- Live FAQ Search Bar -->
+    <div class="relative flex items-center">
+      <div class="absolute left-4 text-[#7a7a7a] dark:text-[#8e8e93] pointer-events-none">
+        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+        </svg>
+      </div>
+      <input
+        type="text"
+        id="faq-search-input"
+        placeholder="Search across all 40 questions (e.g. 2's complement, octal to hex, IEEE 754, Gray code)..."
+        class="w-full pl-11 pr-24 py-3.5 rounded-2xl bg-white dark:bg-[#1c1c1e] border border-[#e0e0e0] dark:border-[#2c2c2e] text-[#1d1d1f] dark:text-[#f5f5f7] text-base placeholder-[#7a7a7a] dark:placeholder-[#8e8e93] focus:outline-none focus:border-[#0066cc] dark:focus:border-[#2997ff] focus:ring-2 focus:ring-[#0066cc]/15 transition-all shadow-xs"
+        autocomplete="off"
+      />
+      <div class="absolute right-4 text-xs font-mono text-[#7a7a7a] dark:text-[#8e8e93]" id="faq-counter">
+        {ALL_FAQS.length} items
+      </div>
+    </div>
+
+    <!-- Category Filter Chips & Controls -->
+    <div class="flex flex-wrap items-center justify-between gap-3 pt-1">
+      <div class="flex items-center gap-2 overflow-x-auto pb-1 scrollbar-none text-xs sm:text-sm">
+        {categories.map((cat, i) => (
+          <button
+            type="button"
+            class={`faq-filter-btn px-3.5 py-1.5 rounded-full font-medium transition-all cursor-pointer ${
+              i === 0
+                ? 'active bg-[#1d1d1f] dark:bg-white text-white dark:text-[#1d1d1f] border border-[#1d1d1f] dark:border-white'
+                : 'bg-white dark:bg-[#1c1c1e] text-[#1d1d1f] dark:text-[#f5f5f7] border border-[#e0e0e0] dark:border-[#2c2c2e] hover:border-[#1d1d1f] dark:hover:border-white'
+            }`}
+            data-cat={cat}
+          >
+            {cat} {cat === 'All' ? `(${ALL_FAQS.length})` : ''}
+          </button>
+        ))}
+      </div>
+
+      <!-- Expand / Collapse All -->
+      <div class="flex items-center gap-2 text-xs font-medium shrink-0 ml-auto">
+        <button
+          type="button"
+          id="btn-expand-all"
+          class="px-3 py-1 rounded-lg bg-white dark:bg-[#1c1c1e] border border-[#e0e0e0] dark:border-[#2c2c2e] text-[#1d1d1f] dark:text-[#f5f5f7] hover:bg-[#f5f5f7] dark:hover:bg-[#242426] transition-colors cursor-pointer"
+        >
+          Expand All
+        </button>
+        <button
+          type="button"
+          id="btn-collapse-all"
+          class="px-3 py-1 rounded-lg bg-white dark:bg-[#1c1c1e] border border-[#e0e0e0] dark:border-[#2c2c2e] text-[#7a7a7a] dark:text-[#8e8e93] hover:text-[#1d1d1f] dark:hover:text-[#f5f5f7] hover:bg-[#f5f5f7] dark:hover:bg-[#242426] transition-colors cursor-pointer"
+        >
+          Collapse All
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- FAQ Accordion List -->
+  <div class="space-y-3" id="faq-list">
+    {ALL_FAQS.map((faq, index) => (
+      <details
+        class="faq-item group bg-white dark:bg-[#161618] border border-[#e0e0e0] dark:border-[#2c2c2e] rounded-2xl overflow-hidden hover:border-[#b0b0b5] dark:hover:border-[#3a3a3c] transition-all shadow-xs"
+        data-category={faq.category || 'General'}
+        data-question={faq.question.toLowerCase()}
+        data-answer={faq.answer.toLowerCase()}
+      >
+        <summary class="flex items-start justify-between gap-4 p-5 sm:p-6 cursor-pointer list-none select-none">
+          <div class="space-y-1.5 text-left">
+            <div class="flex items-center gap-2">
+              <span class="text-[11px] font-mono font-semibold uppercase tracking-wider text-[#0066cc] dark:text-[#2997ff] bg-[#f5f5f7] dark:bg-[#242426] px-2 py-0.5 rounded-md border border-[#e0e0e0]/70 dark:border-[#2c2c2e]">
+                {faq.category || 'General'}
+              </span>
+              <span class="text-[11px] font-mono text-[#7a7a7a] dark:text-[#8e8e93]">
+                Q{index + 1}
+              </span>
+            </div>
+            <h3 class="font-display font-medium text-lg sm:text-xl text-[#1d1d1f] dark:text-[#f5f5f7] leading-snug group-hover:text-[#0066cc] dark:group-hover:text-[#2997ff] transition-colors">
+              {faq.question}
+            </h3>
+          </div>
+          <span class="w-8 h-8 rounded-full bg-[#f5f5f7] dark:bg-[#242426] flex items-center justify-center shrink-0 group-open:rotate-180 transition-transform duration-200 mt-1 border border-[#e0e0e0]/50 dark:border-[#2c2c2e]">
+            <svg class="w-4 h-4 text-[#1d1d1f] dark:text-[#f5f5f7]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+            </svg>
+          </span>
+        </summary>
+        <div class="px-5 sm:px-6 pb-6 text-[#333333] dark:text-[#d2d2d7] text-base sm:text-lg leading-relaxed border-t border-[#f0f0f0] dark:border-[#2c2c2e] pt-4">
+          <p>{faq.answer}</p>
+        </div>
+      </details>
+    ))}
+  </div>
+
+  <!-- Empty Search State -->
+  <div id="faq-no-results" class="hidden text-center py-12 px-4 bg-white dark:bg-[#161618] border border-[#e0e0e0] dark:border-[#2c2c2e] rounded-2xl">
+    <div class="text-[#7a7a7a] dark:text-[#8e8e93] mb-2 text-3xl font-mono">?</div>
+    <h4 class="font-display font-semibold text-lg text-[#1d1d1f] dark:text-[#f5f5f7] mb-1">No matching questions found</h4>
+    <p class="text-sm text-[#7a7a7a] dark:text-[#8e8e93]">Try adjusting your search terms or switch to "All" categories.</p>
+  </div>
+</div>
+
+<script>
+  function setupFaq() {
+    const searchInput = document.getElementById('faq-search-input') as HTMLInputElement | null;
+    const filterButtons = document.querySelectorAll('.faq-filter-btn');
+    const items = document.querySelectorAll('.faq-item') as NodeListOf<HTMLDetailsElement>;
+    const counter = document.getElementById('faq-counter');
+    const noResults = document.getElementById('faq-no-results');
+    const expandAllBtn = document.getElementById('btn-expand-all');
+    const collapseAllBtn = document.getElementById('btn-collapse-all');
+
+    let activeCategory = 'All';
+    let searchQuery = '';
+
+    function filterFaqs() {
+      let visibleCount = 0;
+      items.forEach((item) => {
+        const cat = item.getAttribute('data-category') || '';
+        const q = item.getAttribute('data-question') || '';
+        const a = item.getAttribute('data-answer') || '';
+
+        const matchesCat = activeCategory === 'All' || cat === activeCategory;
+        const matchesSearch = !searchQuery || q.includes(searchQuery) || a.includes(searchQuery);
+
+        if (matchesCat && matchesSearch) {
+          item.style.display = 'block';
+          visibleCount++;
+        } else {
+          item.style.display = 'none';
+        }
+      });
+
+      if (counter) {
+        counter.textContent = `${visibleCount} of ${items.length} items`;
+      }
+
+      if (noResults) {
+        if (visibleCount === 0) {
+          noResults.classList.remove('hidden');
+        } else {
+          noResults.classList.add('hidden');
+        }
+      }
+    }
+
+    searchInput?.addEventListener('input', (e) => {
+      searchQuery = (e.target as HTMLInputElement).value.trim().toLowerCase();
+      filterFaqs();
+    });
+
+    filterButtons.forEach((btn) => {
+      btn.addEventListener('click', () => {
+        filterButtons.forEach((b) => {
+          b.classList.remove('active', 'bg-[#1d1d1f]', 'dark:bg-white', 'text-white', 'dark:text-[#1d1d1f]', 'border-[#1d1d1f]', 'dark:border-white');
+          b.classList.add('bg-white', 'dark:bg-[#1c1c1e]', 'text-[#1d1d1f]', 'dark:text-[#f5f5f7]', 'border-[#e0e0e0]', 'dark:border-[#2c2c2e]');
+        });
+        btn.classList.remove('bg-white', 'dark:bg-[#1c1c1e]', 'text-[#1d1d1f]', 'dark:text-[#f5f5f7]', 'border-[#e0e0e0]', 'dark:border-[#2c2c2e]');
+        btn.classList.add('active', 'bg-[#1d1d1f]', 'dark:bg-white', 'text-white', 'dark:text-[#1d1d1f]', 'border-[#1d1d1f]', 'dark:border-white');
+
+        activeCategory = btn.getAttribute('data-cat') || 'All';
+        filterFaqs();
+      });
+    });
+
+    expandAllBtn?.addEventListener('click', () => {
+      items.forEach((item) => {
+        if (item.style.display !== 'none') {
+          item.open = true;
+        }
+      });
+    });
+
+    collapseAllBtn?.addEventListener('click', () => {
+      items.forEach((item) => {
+        item.open = false;
+      });
+    });
+  }
+
+  // Setup on page load
+  setupFaq();
+  document.addEventListener('astro:page-load', setupFaq);
+</script>

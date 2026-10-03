@@ -1,11 +1,513 @@
 ---
-import Welcome from '../components/Welcome.astro';
 import Layout from '../layouts/Layout.astro';
+import HeroSearch from '../components/HeroSearch.astro';
+import ToolCard from '../components/ToolCard.astro';
+import FaqAccordion from '../components/FaqAccordion.astro';
+import CtaBand from '../components/CtaBand.astro';
+import { CATEGORIES } from '../data/categories';
+import { ALL_TOOLS, getToolsByCategory } from '../data/allTools';
+import { ARTICLES } from '../data/articles';
 
-// Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
-// Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
+const popularSlugs = [
+  'decimal-to-binary',
+  'binary-to-decimal',
+  'binary-addition-calculator',
+  '2s-complement-calculator',
+  'ieee-754-converter',
+  'bitwise-and-calculator',
+  'ascii-to-binary-converter',
+  'any-base-to-any-base-converter',
+  'hex-to-decimal'
+];
+
+const popularTools = ALL_TOOLS.filter((t) => popularSlugs.includes(t.slug));
+
+const homepageSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'WebApplication',
+  'name': 'NumForge',
+  'url': 'https://numforge.online',
+  'applicationCategory': 'EducationalApplication',
+  'operatingSystem': 'All',
+  'browserRequirements': 'Requires JavaScript. Requires HTML5.',
+  'description': 'Comprehensive suite of 137 free online Number System, Computer Arithmetic, and Digital Electronics tools. Convert bases, calculate Two’s Complement, simulate logic gates, and analyze IEEE-754 floating point numbers.',
+  'offers': {
+    '@type': 'Offer',
+    'price': '0',
+    'priceCurrency': 'USD'
+  },
+  'featureList': [
+    'Binary to Decimal, Hex, and Octal conversion with full mathematical derivations',
+    'Two’s Complement 8/16/32/64-bit signed calculator and integer range limits',
+    'Binary, Octal, Hexadecimal, and Base-N arithmetic engines',
+    'Arbitrary Base-N converter (Base 2 through 36)',
+    'IEEE-754 Single (Float32) and Double (Float64) precision float visualizer',
+    'Bitwise operations calculator with interactive 32-bit register'
+  ]
+};
 ---
 
-<Layout>
-	<Welcome />
+<Layout
+  title="NumForge — Number Systems & Digital Electronics Tools"
+  description="Precision online tools for binary conversions, 2’s complement, digital logic simulation, bitwise calculations, and IEEE-754 floating-point analysis. Free, fast, and 100% private."
+  keywords="decimal to binary conversion, convert decimal to binary, decimal binary converter, decimal to binary calculator, base 10 to base 2, binary to decimal conversion, convert binary to decimal, binary decimal converter, binary to decimal calculator, base 2 to base 10, decimal to octal conversion, octal to decimal conversion, decimal to hexadecimal conversion, convert decimal to hex, hexadecimal to decimal conversion, hex to decimal converter, base 16 to base 10, binary to hex conversion, hex to binary conversion, octal to hex conversion, hex to octal conversion, binary addition, binary subtraction, binary multiplication, binary division, ones complement calculator, twos complement calculator, signed integer range, 8 bit range, 16 bit range, 32 bit range, 64 bit range, binary fraction converter, ieee 754 converter, float32 converter, float64 converter, gray code converter, bcd converter, excess-3 converter, logic gates simulator, bit shift calculator, ascii to binary, ascii to hex, number system cheat sheet, number system formulas"
+  image="https://numforge.online/og-image.svg"
+  schema={homepageSchema}
+>
+  <!-- Apple Hero Section: Clean white canvas, SF Pro tight display typography, Action Blue CTAs -->
+  <section class="py-16 sm:py-24 text-center border-b border-[#e0e0e0] bg-white">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
+      <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs sm:text-sm font-medium bg-[#f5f5f7] text-[#1d1d1f] border border-[#e0e0e0]">
+        <span>NumForge 2.0 &bull; 137 Hardware-Grade Digital Tools</span>
+      </div>
+
+      <h1 class="font-display font-semibold text-5xl sm:text-7xl text-[#1d1d1f] tracking-tight leading-[1.06]">
+        Precision number tools.<br class="hidden sm:inline" /> Engineered for zero latency.
+      </h1>
+
+      <p class="text-lg sm:text-xl text-[#7a7a7a] max-w-2xl mx-auto leading-relaxed">
+        Convert between binary, hex, and base-N. Calculate two’s complement, simulate logic gates, and dissect IEEE-754 floats with full step-by-step proofs. 100% in-browser and private.
+      </p>
+
+      <!-- Apple Action Blue CTAs -->
+      <div class="pt-2 flex flex-wrap items-center justify-center gap-3">
+        <a
+          href="/tools/"
+          class="apple-btn-primary"
+        >
+          Explore All 137 Tools
+        </a>
+        <a
+          href="/binary-to-decimal/"
+          class="apple-btn-secondary"
+        >
+          Binary to Decimal &rarr;
+        </a>
+      </div>
+
+      <!-- Live Search Widget -->
+      <div class="pt-6">
+        <HeroSearch />
+      </div>
+
+      <!-- Quick Jump Chips -->
+      <div class="flex flex-wrap items-center justify-center gap-2.5 pt-2 text-sm text-[#7a7a7a]">
+        <span class="font-medium text-[#1d1d1f]">Quick links:</span>
+        <a href="/binary-to-decimal/" class="hover:text-[#0066cc] transition-colors">Binary &rarr; Decimal</a>
+        <span>&bull;</span>
+        <a href="/2s-complement-calculator/" class="hover:text-[#0066cc] transition-colors">2's Complement</a>
+        <span>&bull;</span>
+        <a href="/bitwise-and-calculator/" class="hover:text-[#0066cc] transition-colors">Bitwise AND</a>
+        <span>&bull;</span>
+        <a href="/ieee-754-converter/" class="hover:text-[#0066cc] transition-colors">IEEE-754 Floats</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Popular Tools Section (Parchment Tile Section) -->
+  <section class="py-16 sm:py-24 bg-[#f5f5f7] border-b border-[#e0e0e0]">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-10">
+        <div>
+          <span class="text-xs sm:text-sm font-semibold uppercase tracking-wider text-[#0066cc] block mb-1">Featured</span>
+          <h2 class="font-display font-semibold text-3xl sm:text-4xl text-[#1d1d1f] tracking-tight">
+            Popular Converters & Calculators
+          </h2>
+        </div>
+        <a href="/tools/" class="text-xs sm:text-sm font-semibold text-[#0066cc] hover:underline flex items-center gap-1 shrink-0">
+          Browse Complete Directory ({ALL_TOOLS.length}) &rarr;
+        </a>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+        {popularTools.map((tool, idx) => (
+          <ToolCard tool={tool} index={idx} />
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Complete Suite Directory Grid -->
+  <section id="tools" class="py-16 sm:py-24 bg-white border-b border-[#e0e0e0]">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center max-w-2xl mx-auto mb-12 space-y-2">
+        <span class="text-xs sm:text-sm font-semibold uppercase tracking-wider text-[#7a7a7a] block">Complete Suite</span>
+        <h2 class="font-display font-semibold text-3xl sm:text-4xl text-[#1d1d1f] tracking-tight">
+          Explore All 137 Dedicated Tools
+        </h2>
+        <p class="text-base text-[#7a7a7a]">
+          Every tool features its own independent route, step-by-step mathematical proofs, and client-side calculations.
+        </p>
+      </div>
+
+      <!-- No Results Message for search filter -->
+      <div id="no-results-msg" class="hidden text-center py-10 px-4 rounded-2xl bg-[#f5f5f7] border border-[#e0e0e0] max-w-md mx-auto my-6">
+        <h4 class="font-medium text-lg text-[#1d1d1f]">No matching tools found</h4>
+        <p class="text-sm text-[#7a7a7a] mt-1">Try searching for "binary", "hex", "complement", or "ASCII".</p>
+      </div>
+
+      <!-- Tools Grid (renders complete tools list for live client filtering) -->
+      <div id="tools-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+        {ALL_TOOLS.map((tool, idx) => (
+          <ToolCard tool={tool} index={idx} />
+        ))}
+      </div>
+
+      <div class="mt-12 text-center">
+        <a
+          href="/tools/"
+          class="inline-flex items-center justify-center px-8 py-3.5 rounded-full text-sm font-semibold bg-[#1d1d1f] text-white hover:bg-[#333333] transition-colors"
+        >
+          View Organized Tools Directory &rarr;
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Categories Breakdown (12 Categories Grid) -->
+  <section class="py-16 sm:py-24 bg-[#f5f5f7] border-b border-[#e0e0e0]">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center max-w-xl mx-auto mb-12 space-y-2">
+        <span class="text-xs sm:text-sm font-semibold uppercase tracking-wider text-[#0066cc] block">Directory</span>
+        <h2 class="font-display font-semibold text-3xl sm:text-4xl text-[#1d1d1f] tracking-tight">
+          12 Core Engineering Categories
+        </h2>
+        <p class="text-base text-[#7a7a7a]">
+          Every category has its own dedicated hub page with focused tools and deep educational context.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {CATEGORIES.map((cat, idx) => {
+          const categoryTools = getToolsByCategory(cat.slug);
+          return (
+            <div id={cat.slug} class="bg-white border border-[#e0e0e0] rounded-[20px] p-6 shadow-xs flex flex-col justify-between hover:border-[#b0b0b5] transition-all">
+              <div>
+                <div class="flex items-center justify-between mb-3">
+                  <span class="text-xs font-semibold uppercase tracking-wider text-[#7a7a7a]">
+                    Category {idx + 1}
+                  </span>
+                  <span class="px-2.5 py-0.5 rounded-full text-xs font-medium bg-[#f5f5f7] text-[#1d1d1f] border border-[#e0e0e0]">
+                    {categoryTools.length} Tools
+                  </span>
+                </div>
+                <h3 class="font-display font-semibold text-xl text-[#1d1d1f] mb-1.5">
+                  <a href={`/tools/${cat.slug}/`} class="hover:text-[#0066cc] transition-colors">
+                    {cat.name}
+                  </a>
+                </h3>
+                <p class="text-xs sm:text-sm text-[#7a7a7a] leading-relaxed mb-4 line-clamp-2">
+                  {cat.shortDesc}
+                </p>
+                
+                <div class="space-y-1.5 border-t border-[#f0f0f0] pt-3">
+                  {categoryTools.slice(0, 4).map((t) => (
+                    <a
+                      href={`/${t.slug}/`}
+                      class="flex items-center justify-between p-1.5 rounded-lg hover:bg-[#f5f5f7] transition-colors group text-xs sm:text-sm text-[#1d1d1f]"
+                    >
+                      <span class="group-hover:text-[#0066cc] transition-colors font-medium truncate pr-2">
+                        {t.name}
+                      </span>
+                      <span class="text-[#7a7a7a] group-hover:text-[#0066cc] group-hover:translate-x-0.5 transition-transform font-bold shrink-0">
+                        &rarr;
+                      </span>
+                    </a>
+                  ))}
+                </div>
+              </div>
+
+              <div class="pt-3 mt-3 border-t border-[#f0f0f0]">
+                <a
+                  href={`/tools/${cat.slug}/`}
+                  class="text-xs font-semibold text-[#0066cc] hover:underline flex items-center justify-between"
+                >
+                  <span>Explore All {categoryTools.length} Tools</span>
+                  <span>&rarr;</span>
+                </a>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  </section>
+
+  <!-- Benefits Section (Apple Museum Style) -->
+  <section class="py-16 sm:py-24 bg-white border-b border-[#e0e0e0]">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center max-w-2xl mx-auto mb-14 space-y-2">
+        <span class="text-xs sm:text-sm font-semibold uppercase tracking-wider text-[#0066cc] block">Architecture</span>
+        <h2 class="font-display font-semibold text-3xl sm:text-4xl text-[#1d1d1f] tracking-tight">
+          Engineered for Speed, Privacy & Precision
+        </h2>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="p-7 rounded-[20px] bg-[#f5f5f7] border border-[#e0e0e0] space-y-3">
+          <h3 class="font-display font-semibold text-xl sm:text-2xl text-[#1d1d1f]">0ms Client-Side Calculations</h3>
+          <p class="text-sm sm:text-base text-[#7a7a7a] leading-relaxed">
+            Every formula runs directly in browser memory via ECMAScript BigInt. Results recalculate immediately with zero network latency.
+          </p>
+        </div>
+
+        <div class="p-7 rounded-[20px] bg-[#f5f5f7] border border-[#e0e0e0] space-y-3">
+          <h3 class="font-display font-semibold text-xl sm:text-2xl text-[#1d1d1f]">Step-by-Step Educational Derivations</h3>
+          <p class="text-sm sm:text-base text-[#7a7a7a] leading-relaxed">
+            NumForge surfaces the underlying math: successive division tables, powers-of-radix expansions, carry propagation, and truth tables.
+          </p>
+        </div>
+
+        <div class="p-7 rounded-[20px] bg-[#f5f5f7] border border-[#e0e0e0] space-y-3">
+          <h3 class="font-display font-semibold text-xl sm:text-2xl text-[#1d1d1f]">100% Privacy & Zero Tracking</h3>
+          <p class="text-sm sm:text-base text-[#7a7a7a] leading-relaxed">
+            Your inputs, keys, and values are never sent over the network. Zero cookies, zero tracking scripts, and offline-capable.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Educational Guides Section -->
+  <section id="learning" class="py-16 sm:py-24 bg-[#f5f5f7] border-b border-[#e0e0e0]">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-12">
+        <div>
+          <span class="text-xs sm:text-sm font-semibold uppercase tracking-wider text-[#0066cc] block mb-1">Knowledge Base</span>
+          <h2 class="font-display font-semibold text-3xl sm:text-4xl text-[#1d1d1f] tracking-tight">
+            Computer Architecture & Number Systems
+          </h2>
+        </div>
+        <a href="/learn/" class="text-xs sm:text-sm font-semibold text-[#0066cc] hover:underline flex items-center gap-1 shrink-0">
+          View All {ARTICLES.length} Guides &rarr;
+        </a>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {ARTICLES.map((article) => (
+          <div class="bg-white border border-[#e0e0e0] rounded-[22px] p-6 sm:p-7 flex flex-col justify-between hover:border-[#b0b0b5] hover:shadow-[0_4px_24px_rgba(0,0,0,0.06)] transition-all">
+            <div>
+              <div class="flex items-center justify-between text-xs sm:text-sm mb-3 text-[#7a7a7a]">
+                <span class="font-semibold text-xs uppercase tracking-wider text-[#0066cc] bg-[#f5f5f7] px-2.5 py-0.5 rounded-md border border-[#e0e0e0]">
+                  {article.category}
+                </span>
+                <span>{article.readTime}</span>
+              </div>
+              <h3 class="font-display font-semibold text-xl text-[#1d1d1f] leading-snug mb-2.5">
+                <a href={`/learn/${article.slug}/`} class="hover:text-[#0066cc] transition-colors">
+                  {article.title}
+                </a>
+              </h3>
+              <p class="text-sm text-[#7a7a7a] leading-relaxed mb-6 line-clamp-3">
+                {article.summary}
+              </p>
+            </div>
+            <div class="pt-4 border-t border-[#f0f0f0] flex items-center justify-between text-sm">
+              <span class="text-xs text-[#7a7a7a]">Step-by-step proofs</span>
+              <a
+                href={`/learn/${article.slug}/`}
+                class="font-semibold text-[#0066cc] hover:underline flex items-center gap-1"
+              >
+                Read Guide &rarr;
+              </a>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- DEEP SEO CONTENT SECTION (800 - 1200 Words) -->
+  <section id="about-numforge" class="py-16 sm:py-24 bg-white border-b border-[#e0e0e0]">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-14 space-y-3">
+        <span class="text-xs sm:text-sm font-semibold uppercase tracking-wider text-[#0066cc] block">Engineering Documentation</span>
+        <h2 class="font-display font-semibold text-3xl sm:text-4xl text-[#1d1d1f] tracking-tight">
+          The Complete Engineering Guide to NumForge: Number Systems, Computer Arithmetic & Digital Logic
+        </h2>
+        <p class="text-base sm:text-lg text-[#7a7a7a] max-w-2xl mx-auto">
+          An authoritative reference on radix representation, arithmetic logic unit (ALU) design, signed integer limits, and floating-point encodings.
+        </p>
+      </div>
+
+      <div class="space-y-12 text-[#333333] text-lg sm:text-xl leading-relaxed">
+        <!-- Section 1 -->
+        <div>
+          <h3 class="font-display font-semibold text-2xl sm:text-3xl text-[#1d1d1f] tracking-tight mb-3">
+            1. The NumForge Architecture: Deterministic Client-Side Engineering & Zero-Latency Execution
+          </h3>
+          <p class="mb-4">
+            In modern electrical engineering, computer architecture, and embedded systems development, numeric accuracy and computational speed are paramount. NumForge (<a href="/" class="text-[#0066cc] hover:underline font-medium">numforge.online</a>) was engineered to serve as an authoritative, ad-free digital workbench for students, academic researchers, FPGA designers, and software engineers. Unlike conventional online calculators that rely on slow remote server roundtrips, intrusive tracking scripts, or standard double-precision floating-point approximations, NumForge operates under an uncompromising principle: 100% deterministic client-side execution. Powered by native ECMAScript BigInt primitives, our algorithms guarantee exact precision on numbers of arbitrary bit widths without the standard IEEE-754 precision cutoff at 53 bits. Every formula, truth table, and binary arithmetic proof is computed locally within your browser sandbox with 0ms network latency and complete data privacy.
+          </p>
+        </div>
+
+        <!-- Section 2 -->
+        <div>
+          <h3 class="font-display font-semibold text-2xl sm:text-3xl text-[#1d1d1f] tracking-tight mb-3">
+            2. Positional Radix Transformations: Converting Base 10, Base 2, Base 8, and Base 16
+          </h3>
+          <p class="mb-4">
+            Positional notation forms the bedrock of computational mathematics. A real number N expressed in an integer radix r (&ge; 2) is evaluated as a weighted summation of its constituent digits:
+          </p>
+          <div class="my-5 p-5 rounded-2xl bg-[#f5f5f7] border border-[#e0e0e0] font-mono text-center text-base sm:text-lg text-[#1d1d1f]">
+            N = d<sub>n</sub>r<sup>n</sup> + d<sub>n-1</sub>r<sup>n-1</sup> + &hellip; + d<sub>1</sub>r<sup>1</sup> + d<sub>0</sub>r<sup>0</sup> + d<sub>-1</sub>r<sup>-1</sup> + &hellip; + d<sub>-m</sub>r<sup>-m</sup>
+          </div>
+          <p class="mb-4">
+            NumForge delivers specialized conversion engines designed to simplify transformations across fundamental computing radices:
+          </p>
+          <ul class="list-disc pl-6 space-y-3 text-base sm:text-lg">
+            <li>
+              <strong>Decimal to Binary Conversion (Base 10 to Base 2):</strong> Transforming decimal integers into pure binary bit patterns is accomplished through the successive division by 2 algorithm. By continuously dividing the quotient by 2 and recording remainders (0 or 1), the binary sequence is revealed by reading remainders from bottom to top. Our <a href="/decimal-to-binary/" class="text-[#0066cc] hover:underline font-medium">decimal to binary converter</a> displays every division step, quotient-remainder table, and formatted 4-bit nibbles.
+            </li>
+            <li>
+              <strong>Binary to Decimal Conversion (Base 2 to Base 10):</strong> Using the positional powers of two expansion, each binary digit is paired with its weight (2<sup>0</sup> = 1, 2<sup>1</sup> = 2, 2<sup>2</sup> = 4, 2<sup>3</sup> = 8, 2<sup>4</sup> = 16, up to 2<sup>63</sup>). Our <a href="/binary-to-decimal/" class="text-[#0066cc] hover:underline font-medium">binary to decimal calculator</a> visualizes each term in the summation, providing an instant step-by-step verification solver.
+            </li>
+            <li>
+              <strong>Hexadecimal and Octal Converters:</strong> Because 2<sup>4</sup> = 16, four binary bits correspond to one hexadecimal digit (0–9, A–F). Our <a href="/binary-to-hex/" class="text-[#0066cc] hover:underline font-medium">binary to hex converter</a> and <a href="/hex-to-binary/" class="text-[#0066cc] hover:underline font-medium">hex to binary converter</a> perform direct 4-bit nibble groupings without decimal intermediaries. Similarly, since 2<sup>3</sup> = 8, our <a href="/binary-to-octal/" class="text-[#0066cc] hover:underline font-medium">binary to octal converter</a> and <a href="/octal-to-binary/" class="text-[#0066cc] hover:underline font-medium">octal to binary converter</a> map 3-bit triplets directly. For cross-radix tasks, our <a href="/octal-to-hex/" class="text-[#0066cc] hover:underline font-medium">octal to hex converter</a> and <a href="/hex-to-octal/" class="text-[#0066cc] hover:underline font-medium">hex to octal converter</a> bridge the two bases via binary restructuring. Furthermore, our <a href="/any-base-to-any-base-converter/" class="text-[#0066cc] hover:underline font-medium">universal base-N converter</a> allows arbitrary radix transformations between any base from Base 2 to Base 36 (including ternary base 3, quaternary base 4, and duodecimal base 12).
+            </li>
+          </ul>
+        </div>
+
+        <!-- Section 3 -->
+        <div>
+          <h3 class="font-display font-semibold text-2xl sm:text-3xl text-[#1d1d1f] tracking-tight mb-3">
+            3. Binary Computer Arithmetic: Addition, Subtraction, Multiplication & Long Division
+          </h3>
+          <p class="mb-4">
+            At the hardware level of an Arithmetic Logic Unit (ALU), silicon logic gates execute fundamental binary math. NumForge provides interactive calculators for core binary arithmetic:
+          </p>
+          <ul class="list-disc pl-6 space-y-3 text-base sm:text-lg">
+            <li>
+              <strong>Binary Addition:</strong> Adding binary numbers follows fundamental rules: 0 + 0 = 0, 0 + 1 = 1, 1 + 0 = 1, and 1 + 1 = 0 with a carry bit of 1. Our <a href="/binary-addition-calculator/" class="text-[#0066cc] hover:underline font-medium">binary addition calculator</a> traces carry propagation across columns, illustrating how full adders cascade carries.
+            </li>
+            <li>
+              <strong>Binary Subtraction:</strong> Subtracting binary numbers introduces borrowing across columns (0 &minus; 1 = 1 with a borrow of 1 from the next higher bit). Our <a href="/binary-subtraction-calculator/" class="text-[#0066cc] hover:underline font-medium">binary subtraction calculator</a> illustrates borrow flags and column alignment.
+            </li>
+            <li>
+              <strong>Binary Multiplication & Division:</strong> Multiplying binary numbers uses partial product accumulation based on binary shifts and adds. Binary division performs repeated subtraction through restoring or non-restoring long division algorithms, calculating exact quotients and remainders.
+            </li>
+          </ul>
+        </div>
+
+        <!-- Section 4 -->
+        <div>
+          <h3 class="font-display font-semibold text-2xl sm:text-3xl text-[#1d1d1f] tracking-tight mb-3">
+            4. Signed Number Representations, Complements & Integer Register Limits
+          </h3>
+          <p class="mb-4">
+            Representing negative values in digital circuits requires specialized signed binary number formats. NumForge allows side-by-side comparison across all major signed representation schemes:
+          </p>
+          <ul class="list-disc pl-6 space-y-3 text-base sm:text-lg">
+            <li>
+              <strong>Signed Magnitude:</strong> Allocates the most significant bit (MSB) as a sign flag (0 for positive, 1 for negative) with remaining bits representing magnitude. While intuitive, it suffers from redundant dual zeros (+0 and &minus;0) and requires separate adder-subtractor circuits.
+            </li>
+            <li>
+              <strong>One’s Complement Calculator:</strong> Inverts every bit using bitwise NOT. While simple, it retains dual-zero ambiguity and requires an end-around carry step in addition.
+            </li>
+            <li>
+              <strong>Two’s Complement Calculator:</strong> The universal standard in modern microprocessors. Formed by taking the One’s Complement and adding 1 to the least significant bit (LSB). Two's complement eliminates negative zero and allows subtraction to be computed as A &minus; B &equiv; A + (&#126;B + 1) using standard addition circuitry. NumForge also calculates Nine's and Ten's complements for decimal systems via our <a href="/2s-complement-calculator/" class="text-[#0066cc] hover:underline font-medium">2's complement calculator</a>.
+            </li>
+            <li>
+              <strong>Integer Range Calculator:</strong> An n-bit Two’s Complement register spans an asymmetric signed integer range from &minus;2<sup>n-1</sup> to +2<sup>n-1</sup> &minus; 1, whereas unsigned ranges span from 0 to 2<sup>n</sup> &minus; 1. NumForge provides exact limit calculations:
+              <ul class="list-circle pl-6 mt-2 space-y-1 font-mono text-sm sm:text-base">
+                <li>4-bit range: Signed &minus;8 to +7; Unsigned 0 to 15</li>
+                <li>8-bit range (Byte): Signed &minus;128 to +127; Unsigned 0 to 255</li>
+                <li>16-bit range (Word): Signed &minus;32,768 to +32,767; Unsigned 0 to 65,535</li>
+                <li>32-bit range (Dword): Signed &minus;2,147,483,648 to +2,147,483,647; Unsigned 0 to 4,294,967,295</li>
+                <li>64-bit range (Qword): Signed &minus;9,223,372,036,854,775,808 to +9,223,372,036,854,775,807</li>
+              </ul>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Section 5 -->
+        <div>
+          <h3 class="font-display font-semibold text-2xl sm:text-3xl text-[#1d1d1f] tracking-tight mb-3">
+            5. Digital Logic Gate Synthesis & Bitwise Operations
+          </h3>
+          <p class="mb-4">
+            All microprocessors decompose into elementary Boolean logic gates governed by Boolean algebra:
+          </p>
+          <ul class="list-disc pl-6 space-y-3 text-base sm:text-lg">
+            <li>
+              <strong>Logic Gates Simulator:</strong> Test elementary gates including AND, OR, XOR, NOT, NAND, NOR, and XNOR. NAND and NOR serve as universal gates capable of synthesizing any digital circuit. Our <a href="/bitwise-and-calculator/" class="text-[#0066cc] hover:underline font-medium">bitwise AND calculator</a> and logic tools generate complete multi-variable truth tables and schematic diagrams.
+            </li>
+            <li>
+              <strong>Bitwise Operations & Shifts:</strong> Our <a href="/binary-bit-calculator/" class="text-[#0066cc] hover:underline font-medium">binary bit calculator</a> provides interactive clickboards for Bitwise AND, OR, XOR, and NOT masks. It supports logical left shift, arithmetic right shift, and circular bit rotations, alongside storage conversions from bits to bytes, kilobytes, megabytes, and gigabytes.
+            </li>
+          </ul>
+        </div>
+
+        <!-- Section 6 -->
+        <div>
+          <h3 class="font-display font-semibold text-2xl sm:text-3xl text-[#1d1d1f] tracking-tight mb-3">
+            6. Real Numbers, Binary Fractions & IEEE-754 Floating-Point Standards
+          </h3>
+          <p class="mb-4">
+            Finite registers cannot store continuous real numbers without discrete approximations:
+          </p>
+          <ul class="list-disc pl-6 space-y-3 text-base sm:text-lg">
+            <li>
+              <strong>Binary Fraction Converter:</strong> Convert decimal fractions to binary using repeated multiplication by 2. Understand fractional powers of two (2<sup>-1</sup> = 0.5, 2<sup>-2</sup> = 0.25, 2<sup>-3</sup> = 0.125) and observe why fractions like 0.1 produce non-terminating repeating binary patterns via our <a href="/binary-fraction-converter/" class="text-[#0066cc] hover:underline font-medium">binary fraction converter</a>.
+            </li>
+            <li>
+              <strong>IEEE-754 Floating-Point Converter:</strong> Dissect decimal numbers into Single Precision (32-bit Float32) and Double Precision (64-bit Float64) formats. View the 1-bit Sign, Biased Exponent (bias 127 for float, 1023 for double), and Normalized Mantissa / Significand. Our <a href="/ieee-754-converter/" class="text-[#0066cc] hover:underline font-medium">IEEE-754 converter</a> exposes rounding deltas, subnormal boundaries, and special representations (+&infin;, &minus;&infin;, NaN).
+            </li>
+          </ul>
+        </div>
+
+        <!-- Section 7 -->
+        <div>
+          <h3 class="font-display font-semibold text-2xl sm:text-3xl text-[#1d1d1f] tracking-tight mb-3">
+            7. Specialized Digital Encodings: Gray Code, BCD, Excess-3 & ASCII
+          </h3>
+          <p class="mb-4">
+            Beyond standard positional integers, computer systems employ diverse digital encodings:
+          </p>
+          <ul class="list-disc pl-6 space-y-3 text-base sm:text-lg">
+            <li>
+              <strong>Gray Code to Binary:</strong> Reflected Gray code guarantees that only a single bit toggles between consecutive numerical states. This unit-distance property eliminates race conditions in mechanical rotary encoders. Use our <a href="/binary-to-gray-code-converter/" class="text-[#0066cc] hover:underline font-medium">Gray code converter</a> to translate between natural binary and Gray representations.
+            </li>
+            <li>
+              <strong>Binary Coded Decimal (8421 BCD) & Excess-3:</strong> BCD encodes each decimal digit into its own 4-bit nibble, facilitating clock displays and financial calculators. Excess-3 (XS-3) adds 3 (0011) to each BCD digit, simplifying 9's complement arithmetic. Our <a href="/binary-to-bcd-converter/" class="text-[#0066cc] hover:underline font-medium">BCD converter</a> supports both formats.
+            </li>
+            <li>
+              <strong>Text & System Encodings:</strong> Translate ASCII characters into binary and hex, parse Unicode codepoints, convert RGB color codes to hex, and map dotted-decimal IPv4 addresses to 32-bit binary bitstreams with our multi-radix text tools like <a href="/ascii-to-binary-converter/" class="text-[#0066cc] hover:underline font-medium">ASCII to binary converter</a>.
+            </li>
+          </ul>
+        </div>
+
+        <!-- Section 8 -->
+        <div>
+          <h3 class="font-display font-semibold text-2xl sm:text-3xl text-[#1d1d1f] tracking-tight mb-3">
+            8. Number System Formulas, Conversion Cheat Sheets & Academic Verification
+          </h3>
+          <p class="mb-4">
+            NumForge is built as a complete pedagogical resource. Every tool features integrated mathematical formulas, lookup tables, and step-by-step proofs. Whether you are validating homework exercises, checking bitwise register masks in C or Rust firmware, or preparing for computer science examinations, NumForge delivers instant, transparent, and mathematically rigorous solutions. Explore our <a href="/number-system-formula-sheet/" class="text-[#0066cc] hover:underline font-medium">Number System Formula Sheet</a> and <a href="/number-system-cheat-sheet/" class="text-[#0066cc] hover:underline font-medium">Number System Cheat Sheet</a>.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ Section (Parchment Tile) -->
+  <section class="py-16 sm:py-24 bg-[#f5f5f7] border-b border-[#e0e0e0]">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center max-w-xl mx-auto mb-12 space-y-2">
+        <span class="text-xs sm:text-sm font-semibold uppercase tracking-wider text-[#0066cc] block">FAQ</span>
+        <h2 class="font-display font-semibold text-3xl sm:text-4xl text-[#1d1d1f] tracking-tight">
+          Frequently Asked Questions
+        </h2>
+      </div>
+
+      <FaqAccordion />
+    </div>
+  </section>
+
+  <!-- Final CTA Band -->
+  <section class="py-16 sm:py-20 bg-white">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <CtaBand />
+    </div>
+  </section>
 </Layout>

@@ -1,0 +1,350 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --font-display: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --font-sans: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+
+  --radius-xs: 5px;
+  --radius-sm: 8px;
+  --radius-md: 11px;
+  --radius-lg: 18px;
+  --radius-pill: 9999px;
+  --radius-full: 9999px;
+}
+
+:root {
+  --color-canvas: #ffffff;
+  --color-canvas-parchment: #f5f5f7;
+  --color-surface-pearl: #fafafc;
+  --color-surface-tile-1: #272729;
+  --color-surface-tile-2: #2a2a2c;
+  --color-surface-tile-3: #252527;
+  --color-surface-black: #000000;
+  --color-surface-chip-translucent: rgba(210, 210, 215, 0.64);
+
+  --color-ink: #1d1d1f;
+  --color-body: #1d1d1f;
+  --color-body-muted: #7a7a7a;
+  --color-ink-muted-80: #333333;
+  --color-ink-muted-48: #7a7a7a;
+
+  --color-divider-soft: #f0f0f0;
+  --color-hairline: #e0e0e0;
+
+  --color-primary: #0066cc;
+  --color-primary-focus: #0071e3;
+  --color-primary-on-dark: #2997ff;
+
+  --color-on-primary: #ffffff;
+  --color-on-dark: #ffffff;
+
+  color-scheme: light;
+}
+
+.dark {
+  --color-canvas: #000000;
+  --color-canvas-parchment: #121214;
+  --color-surface-pearl: #1a1a1c;
+  --color-surface-tile-1: #1a1a1c;
+  --color-surface-tile-2: #242426;
+  --color-surface-tile-3: #161618;
+  --color-surface-black: #000000;
+  --color-surface-chip-translucent: rgba(60, 60, 65, 0.64);
+
+  --color-ink: #f5f5f7;
+  --color-body: #e5e5ea;
+  --color-body-muted: #8e8e93;
+  --color-ink-muted-80: #d1d1d6;
+  --color-ink-muted-48: #8e8e93;
+
+  --color-divider-soft: #242426;
+  --color-hairline: #2c2c2e;
+
+  --color-primary: #2997ff;
+  --color-primary-focus: #47a3ff;
+  --color-primary-on-dark: #2997ff;
+
+  --color-on-primary: #ffffff;
+  --color-on-dark: #ffffff;
+
+  color-scheme: dark;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    font-family: var(--font-sans);
+    color: var(--color-body);
+    background-color: var(--color-canvas);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    font-size: 19px;
+  }
+
+  body {
+    background-color: var(--color-canvas);
+    color: var(--color-body);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    margin: 0;
+    line-height: 1.55;
+    transition: background-color 0.2s ease, color 0.2s ease;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-display);
+    color: var(--color-ink);
+    font-weight: 600;
+    letter-spacing: -0.015em;
+  }
+
+  ::selection {
+    background-color: var(--color-primary);
+    color: #ffffff;
+  }
+}
+
+/* Apple Action Blue Button */
+@utility apple-btn-primary {
+  background-color: var(--color-primary);
+  color: #ffffff;
+  border-radius: var(--radius-pill);
+  padding: 14px 28px;
+  font-size: 17px;
+  font-weight: 500;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.15s ease, transform 0.1s ease;
+
+  &:hover {
+    background-color: var(--color-primary-focus);
+  }
+
+  &:active {
+    transform: scale(0.98);
+  }
+}
+
+/* Apple Secondary Pill Button */
+@utility apple-btn-secondary {
+  background-color: var(--color-canvas);
+  color: var(--color-primary);
+  border: 1px solid var(--color-hairline);
+  border-radius: var(--radius-pill);
+  padding: 14px 28px;
+  font-size: 17px;
+  font-weight: 500;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s ease;
+
+  &:hover {
+    border-color: var(--color-primary);
+    background-color: var(--color-canvas-parchment);
+  }
+
+  &:active {
+    transform: scale(0.98);
+  }
+}
+
+/* Apple Store Utility Card */
+@utility apple-card {
+  background-color: var(--color-canvas);
+  border: 1px solid var(--color-hairline);
+  border-radius: var(--radius-lg);
+  padding: 28px;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+
+  &:hover {
+    border-color: #b0b0b5;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+  }
+}
+
+/* Apple Dark Product Tile */
+@utility apple-tile-dark {
+  background-color: var(--color-surface-tile-1);
+  color: var(--color-on-dark);
+}
+
+/* Apple Input */
+@utility apple-input {
+  background-color: var(--color-canvas);
+  color: var(--color-ink);
+  border: 1px solid var(--color-hairline);
+  border-radius: var(--radius-md);
+  padding: 13px 20px;
+  outline: none;
+  font-size: 17px;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+
+  &:focus {
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 3px rgba(0, 102, 204, 0.15);
+  }
+}
+
+/* Custom scrollbars */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: var(--color-canvas-parchment);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-hairline);
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-ink-muted-48);
+}
+
+/* ==========================================================================
+   Comprehensive Dark Mode Palette Overrides for Apple Aesthetic
+   ========================================================================== */
+.dark body {
+  background-color: #000000;
+  color: #e5e5ea;
+}
+
+.dark h1,
+.dark h2,
+.dark h3,
+.dark h4,
+.dark h5,
+.dark h6 {
+  color: #f5f5f7;
+}
+
+/* Standard Apple light backgrounds converted to OLED pitch / deep charcoal */
+.dark .bg-white {
+  background-color: #121214;
+}
+
+.dark .bg-\[\#ffffff\]\/90 {
+  background-color: rgba(18, 18, 20, 0.88);
+}
+
+.dark .bg-\[\#ffffff\] {
+  background-color: #121214;
+}
+
+.dark .bg-\[\#f5f5f7\] {
+  background-color: #1a1a1c;
+}
+
+.dark .bg-\[\#fafafc\] {
+  background-color: #161618;
+}
+
+.dark .bg-\[\#e8e8ed\] {
+  background-color: #2c2c2e;
+}
+
+/* Borders */
+.dark .border-\[\#e0e0e0\] {
+  border-color: #2c2c2e;
+}
+
+.dark .border-\[\#f0f0f0\] {
+  border-color: #242426;
+}
+
+.dark .border-\[\#e0e0e0\]\/70 {
+  border-color: rgba(44, 44, 46, 0.7);
+}
+
+.dark .border-\[\#e0e0e0\]\/50 {
+  border-color: rgba(44, 44, 46, 0.5);
+}
+
+.dark .divide-\[\#f0f0f0\] > :not([hidden]) ~ :not([hidden]) {
+  border-color: #242426;
+}
+
+/* Typography tokens */
+.dark .text-\[\#1d1d1f\] {
+  color: #f5f5f7;
+}
+
+.dark .text-\[\#333333\] {
+  color: #d2d2d7;
+}
+
+.dark .text-\[\#555555\] {
+  color: #a1a1a6;
+}
+
+.dark .text-\[\#7a7a7a\] {
+  color: #8e8e93;
+}
+
+.dark .text-\[\#0066cc\] {
+  color: #2997ff;
+}
+
+/* Interactive hover states */
+.dark .hover\:bg-\[\#f5f5f7\]:hover {
+  background-color: #242426;
+}
+
+.dark .hover\:bg-\[\#e0e0e0\]:hover {
+  background-color: #2c2c2e;
+}
+
+.dark .hover\:text-\[\#1d1d1f\]:hover {
+  color: #ffffff;
+}
+
+.dark .hover\:border-\[\#1d1d1f\]:hover {
+  border-color: #f5f5f7;
+}
+
+.dark .hover\:border-\[\#b0b0b5\]:hover {
+  border-color: #48484a;
+}
+
+.dark .hover\:text-\[\#0066cc\]:hover {
+  color: #2997ff;
+}
+
+.dark .focus\:bg-white:focus {
+  background-color: #0b0b0d;
+}
+
+/* Select dropdowns and options */
+.dark select {
+  background-color: #1c1c1e;
+  color: #f5f5f7;
+  border-color: #2c2c2e;
+}
+
+.dark select option {
+  background-color: #1c1c1e;
+  color: #f5f5f7;
+}
+
+.dark input {
+  color-scheme: dark;
+}
+
+/* Error feedback box */
+.dark .bg-red-50 {
+  background-color: rgba(255, 69, 58, 0.12);
+}
+
+.dark .border-red-200 {
+  border-color: rgba(255, 69, 58, 0.3);
+}
+
+.dark .text-red-700 {
+  color: #ff453a;
+}

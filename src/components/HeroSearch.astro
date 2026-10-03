@@ -1,0 +1,115 @@
+---
+import { CATEGORIES } from '../data/categories';
+import { ALL_TOOLS } from '../data/allTools';
+---
+
+<div class="w-full max-w-3xl mx-auto space-y-4">
+  <!-- Apple Search Pill -->
+  <div class="relative flex items-center">
+    <div class="absolute left-4 text-[#7a7a7a] dark:text-[#8e8e93] pointer-events-none">
+      <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+      </svg>
+    </div>
+
+    <input
+      type="text"
+      id="tool-search-input"
+      placeholder="Search all 137 tools by radix, name, complement, or bitwise operation..."
+      class="w-full pl-12 pr-24 py-3.5 rounded-full bg-[#f5f5f7] dark:bg-[#1c1c1e] border border-[#e0e0e0] dark:border-[#2c2c2e] text-[#1d1d1f] dark:text-[#f5f5f7] text-base placeholder-[#7a7a7a] dark:placeholder-[#8e8e93] focus:bg-white dark:focus:bg-[#121214] focus:outline-none focus:border-[#0066cc] dark:focus:border-[#2997ff] focus:ring-2 focus:ring-[#0066cc]/15 transition-all shadow-xs"
+      autocomplete="off"
+    />
+
+    <div class="absolute right-4 flex items-center gap-1.5 pointer-events-none">
+      <kbd class="hidden sm:inline-block px-2 py-0.5 text-xs font-mono text-[#7a7a7a] dark:text-[#8e8e93] bg-white dark:bg-[#2c2c2e] border border-[#e0e0e0] dark:border-[#38383a] rounded shadow-xs">
+        /
+      </kbd>
+    </div>
+  </div>
+
+  <!-- Category Filter Chips -->
+  <div class="flex items-center gap-2 overflow-x-auto pb-1 scrollbar-none text-xs sm:text-sm">
+    <button
+      type="button"
+      class="filter-pill active whitespace-nowrap px-4 py-2 rounded-full font-medium transition-all bg-[#1d1d1f] dark:bg-white text-white dark:text-[#1d1d1f] border border-[#1d1d1f] dark:border-white cursor-pointer"
+      data-filter="all"
+    >
+      All Tools ({ALL_TOOLS.length})
+    </button>
+    {CATEGORIES.map((cat) => (
+      <button
+        type="button"
+        class="filter-pill whitespace-nowrap px-4 py-2 rounded-full font-medium transition-all bg-[#f5f5f7] dark:bg-[#1c1c1e] text-[#1d1d1f] dark:text-[#f5f5f7] border border-[#e0e0e0] dark:border-[#2c2c2e] hover:border-[#1d1d1f] dark:hover:border-white cursor-pointer"
+        data-filter={cat.slug}
+      >
+        {cat.name}
+      </button>
+    ))}
+  </div>
+</div>
+
+<script>
+  function setupHeroSearch() {
+    const searchInput = document.getElementById('tool-search-input') as HTMLInputElement | null;
+    const filterPills = document.querySelectorAll<HTMLButtonElement>('.filter-pill');
+    const toolCards = document.querySelectorAll<HTMLElement>('#tools-grid > div');
+    const noResultsBox = document.getElementById('no-results-msg');
+
+    let activeCategory = 'all';
+    let searchQuery = '';
+
+    function applyFilters() {
+      let visibleCount = 0;
+
+      toolCards.forEach((card) => {
+        const category = card.getAttribute('data-category') || '';
+        const tags = card.getAttribute('data-tags') || '';
+        const name = card.getAttribute('data-name') || '';
+
+        const matchesCategory = activeCategory === 'all' || category === activeCategory;
+        const matchesSearch = !searchQuery || 
+          name.includes(searchQuery) || 
+          tags.includes(searchQuery) ||
+          category.includes(searchQuery);
+
+        if (matchesCategory && matchesSearch) {
+          card.style.display = 'flex';
+          visibleCount++;
+        } else {
+          card.style.display = 'none';
+        }
+      });
+
+      if (noResultsBox) {
+        if (visibleCount === 0) {
+          noResultsBox.classList.remove('hidden');
+        } else {
+          noResultsBox.classList.add('hidden');
+        }
+      }
+    }
+
+    searchInput?.addEventListener('input', (e) => {
+      searchQuery = (e.target as HTMLInputElement).value.trim().toLowerCase();
+      applyFilters();
+    });
+
+    filterPills.forEach((pill) => {
+      pill.addEventListener('click', () => {
+        filterPills.forEach((p) => {
+          p.classList.remove('active', 'bg-[#1d1d1f]', 'dark:bg-white', 'text-white', 'dark:text-[#1d1d1f]', 'border-[#1d1d1f]', 'dark:border-white');
+          p.classList.add('bg-[#f5f5f7]', 'dark:bg-[#1c1c1e]', 'text-[#1d1d1f]', 'dark:text-[#f5f5f7]', 'border-[#e0e0e0]', 'dark:border-[#2c2c2e]');
+        });
+
+        pill.classList.remove('bg-[#f5f5f7]', 'dark:bg-[#1c1c1e]', 'text-[#1d1d1f]', 'dark:text-[#f5f5f7]', 'border-[#e0e0e0]', 'dark:border-[#2c2c2e]');
+        pill.classList.add('active', 'bg-[#1d1d1f]', 'dark:bg-white', 'text-white', 'dark:text-[#1d1d1f]', 'border-[#1d1d1f]', 'dark:border-white');
+
+        activeCategory = pill.getAttribute('data-filter') || 'all';
+        applyFilters();
+      });
+    });
+  }
+
+  setupHeroSearch();
+  document.addEventListener('astro:page-load', setupHeroSearch);
+</script>

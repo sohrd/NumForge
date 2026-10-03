@@ -1,0 +1,231 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { ALL_TOOLS, CATEGORIES, getToolsByCategory } from '../../data/allTools';
+
+const canonicalUrl = 'https://numforge.online/tools/';
+
+const toolsIndexSchema = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'CollectionPage',
+      '@id': `${canonicalUrl}#directory`,
+      'name': 'NumForge Tools Directory – All 137 Number System & Digital Electronics Tools',
+      'url': canonicalUrl,
+      'description': 'Browse all 137 free online number system converters, binary arithmetic calculators, Two’s Complement engines, and IEEE-754 analyzers.',
+      'mainEntity': {
+        '@type': 'ItemList',
+        'itemListElement': ALL_TOOLS.map((t, index) => ({
+          '@type': 'ListItem',
+          'position': index + 1,
+          'name': t.name,
+          'url': `https://numforge.online/${t.slug}/`
+        }))
+      }
+    },
+    {
+      '@type': 'BreadcrumbList',
+      '@id': `${canonicalUrl}#breadcrumb`,
+      'itemListElement': [
+        {
+          '@type': 'ListItem',
+          'position': 1,
+          'name': 'Home',
+          'item': 'https://numforge.online/'
+        },
+        {
+          '@type': 'ListItem',
+          'position': 2,
+          'name': 'Tools Directory',
+          'item': canonicalUrl
+        }
+      ]
+    }
+  ]
+};
+---
+
+<Layout
+  title="All 137 Number System & Digital Electronics Tools | NumForge"
+  description="Explore the complete library of 137 free online number system converters, binary calculators, logic gates, Two’s Complement tools, and IEEE-754 float visualizers."
+  canonical={canonicalUrl}
+  schema={toolsIndexSchema}
+>
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-16 space-y-12">
+    <!-- Header Hero -->
+    <div class="text-center max-w-3xl mx-auto space-y-4">
+      <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs sm:text-sm font-medium bg-[#f5f5f7] border border-[#e0e0e0] text-[#1d1d1f]">
+        <span>Comprehensive Directory &bull; {ALL_TOOLS.length} Dedicated Tools</span>
+      </div>
+
+      <h1 class="font-display font-semibold text-4xl sm:text-6xl text-[#1d1d1f] tracking-tight leading-tight">
+        Complete Tools Library
+      </h1>
+
+      <p class="text-lg sm:text-xl text-[#7a7a7a] leading-relaxed">
+        Deterministic, hardware-grade calculations for binary arithmetic, radix transformations, signed registers, and digital logic. All 100% private and computed in-browser.
+      </p>
+    </div>
+
+    <!-- Live Directory Search Bar & Category Jump Pills -->
+    <div class="space-y-4 max-w-4xl mx-auto">
+      <div class="relative flex items-center">
+        <div class="absolute left-4 text-[#7a7a7a] pointer-events-none">
+          <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+          </svg>
+        </div>
+        <input
+          type="text"
+          id="global-dir-search"
+          placeholder="Search all 137 tools (e.g. binary, decimal, hex, ASCII, bitwise, IEEE 754, complement, base conversion)..."
+          class="w-full pl-11 pr-24 py-3.5 rounded-full bg-[#f5f5f7] border border-[#e0e0e0] text-base text-[#1d1d1f] placeholder-[#7a7a7a] focus:bg-white focus:outline-none focus:border-[#0066cc] focus:ring-2 focus:ring-[#0066cc]/15 transition-all shadow-xs"
+          autocomplete="off"
+        />
+        <div class="absolute right-4 text-xs font-mono text-[#7a7a7a]" id="dir-counter">
+          {ALL_TOOLS.length} tools
+        </div>
+      </div>
+
+      <!-- Category Jump Bar -->
+      <div class="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-none text-xs sm:text-sm">
+        <a href="#all" class="cat-pill whitespace-nowrap px-3.5 py-1.5 rounded-full font-medium bg-[#1d1d1f] text-white border border-[#1d1d1f]" data-cat="all">
+          All ({ALL_TOOLS.length})
+        </a>
+        {CATEGORIES.map((cat) => (
+          <a
+            href={`#cat-${cat.slug}`}
+            class="cat-pill whitespace-nowrap px-3.5 py-1.5 rounded-full font-medium bg-[#f5f5f7] text-[#1d1d1f] border border-[#e0e0e0] hover:border-[#1d1d1f] transition-colors"
+            data-cat={cat.slug}
+          >
+            {cat.name} ({getToolsByCategory(cat.slug).length})
+          </a>
+        ))}
+      </div>
+    </div>
+
+    <!-- 12 Categorized Sections -->
+    <div class="space-y-16" id="tools-directory-container">
+      {CATEGORIES.map((category) => {
+        const catTools = getToolsByCategory(category.slug);
+        return (
+          <section id={`cat-${category.slug}`} class="category-block space-y-6 scroll-mt-24" data-category={category.slug}>
+            <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-3 pb-3 border-b border-[#e0e0e0]">
+              <div>
+                <span class="text-xs font-semibold uppercase tracking-wider text-[#0066cc] block mb-1">
+                  Category Suite
+                </span>
+                <h2 class="font-display font-semibold text-2xl sm:text-3xl text-[#1d1d1f] tracking-tight">
+                  <a href={`/tools/${category.slug}/`} class="hover:text-[#0066cc] transition-colors">
+                    {category.name}
+                  </a>
+                </h2>
+              </div>
+              <a
+                href={`/tools/${category.slug}/`}
+                class="text-xs sm:text-sm font-semibold text-[#0066cc] hover:underline flex items-center gap-1 shrink-0"
+              >
+                View Category Hub ({catTools.length}) &rarr;
+              </a>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+              {catTools.map((tool) => (
+                <a
+                  href={`/${tool.slug}/`}
+                  class="dir-tool-card relative flex flex-col justify-between p-6 rounded-[20px] bg-white border border-[#e0e0e0] hover:border-[#b0b0b5] hover:shadow-xs transition-all duration-200 group"
+                  data-name={tool.name.toLowerCase()}
+                  data-desc={tool.shortDesc.toLowerCase()}
+                  data-cat={category.slug}
+                >
+                  <div>
+                    <div class="flex items-center justify-between gap-2 mb-2.5">
+                      <span class="text-[11px] font-mono font-semibold uppercase tracking-wider text-[#7a7a7a] bg-[#f5f5f7] px-2 py-0.5 rounded-md border border-[#e0e0e0]/70">
+                        {category.name}
+                      </span>
+                      <span class="text-[11px] font-mono text-[#0066cc]">Instant</span>
+                    </div>
+
+                    <h3 class="font-display font-semibold text-xl text-[#1d1d1f] group-hover:text-[#0066cc] transition-colors leading-snug mb-2">
+                      {tool.name}
+                    </h3>
+
+                    <p class="text-sm text-[#7a7a7a] leading-relaxed line-clamp-2 mb-4">
+                      {tool.shortDesc}
+                    </p>
+                  </div>
+
+                  <div class="pt-3 border-t border-[#f0f0f0] flex items-center justify-between text-xs sm:text-sm">
+                    <span class="text-xs text-[#7a7a7a] font-mono">0ms</span>
+                    <span class="font-semibold text-[#0066cc] group-hover:translate-x-0.5 transition-transform flex items-center gap-1">
+                      Open Tool &rarr;
+                    </span>
+                  </div>
+                </a>
+              ))}
+            </div>
+          </section>
+        );
+      })}
+    </div>
+
+    <!-- Empty Search State -->
+    <div id="dir-no-results" class="hidden text-center py-16 px-4 bg-[#f5f5f7] border border-[#e0e0e0] rounded-2xl">
+      <h3 class="font-display font-semibold text-xl text-[#1d1d1f] mb-1">No matching tools found</h3>
+      <p class="text-sm text-[#7a7a7a]">Try searching for keywords like "binary", "hex", "complement", or "ASCII".</p>
+    </div>
+  </div>
+</Layout>
+
+<script>
+  function setupDirectorySearch() {
+    const searchInput = document.getElementById('global-dir-search') as HTMLInputElement | null;
+    const cards = document.querySelectorAll('.dir-tool-card') as NodeListOf<HTMLElement>;
+    const sections = document.querySelectorAll('.category-block') as NodeListOf<HTMLElement>;
+    const counter = document.getElementById('dir-counter');
+    const noResults = document.getElementById('dir-no-results');
+
+    searchInput?.addEventListener('input', (e) => {
+      const q = (e.target as HTMLInputElement).value.trim().toLowerCase();
+      let visibleTotal = 0;
+
+      sections.forEach((sec) => {
+        let secVisible = 0;
+        const secCards = sec.querySelectorAll('.dir-tool-card') as NodeListOf<HTMLElement>;
+
+        secCards.forEach((card) => {
+          const name = card.getAttribute('data-name') || '';
+          const desc = card.getAttribute('data-desc') || '';
+          if (!q || name.includes(q) || desc.includes(q)) {
+            card.style.display = 'flex';
+            secVisible++;
+            visibleTotal++;
+          } else {
+            card.style.display = 'none';
+          }
+        });
+
+        if (secVisible === 0) {
+          sec.style.display = 'none';
+        } else {
+          sec.style.display = 'block';
+        }
+      });
+
+      if (counter) {
+        counter.textContent = `${visibleTotal} tools`;
+      }
+
+      if (noResults) {
+        if (visibleTotal === 0) {
+          noResults.classList.remove('hidden');
+        } else {
+          noResults.classList.add('hidden');
+        }
+      }
+    });
+  }
+
+  setupDirectorySearch();
+  document.addEventListener('astro:page-load', setupDirectorySearch);
+</script>

@@ -1,0 +1,364 @@
+---
+import type { ToolDefinition } from '../data/types';
+
+interface Props {
+  tool: ToolDefinition;
+}
+
+const { tool } = Astro.props;
+---
+
+<div
+  class="bg-white dark:bg-[#161618] border border-[#e0e0e0] dark:border-[#2c2c2e] rounded-[24px] p-6 sm:p-10 shadow-xs transition-colors"
+  id="tool-workbench"
+  data-slug={tool.slug}
+  data-engine={tool.engineType}
+  data-default-base={tool.inputConfig.defaultBase || 10}
+  data-default-target-base={tool.inputConfig.defaultTargetBase || 2}
+  data-default-width={tool.inputConfig.defaultBitWidth || 8}
+  data-default-op={tool.inputConfig.defaultOperation || '+'}
+>
+  <!-- Workbench Header -->
+  <div class="flex flex-wrap items-center justify-between gap-4 pb-6 border-b border-[#f0f0f0] dark:border-[#2c2c2e]">
+    <div class="flex items-center gap-2.5 text-xs sm:text-sm font-mono text-[#7a7a7a] dark:text-[#8e8e93]">
+      <span class="w-2.5 h-2.5 rounded-full bg-[#0066cc] dark:bg-[#2997ff] animate-pulse"></span>
+      <span>Engine: Client-Side Verified (0ms Latency)</span>
+    </div>
+    <div class="flex items-center gap-2.5">
+      <button
+        type="button"
+        id="btn-sample"
+        class="px-4 py-1.5 rounded-full text-xs sm:text-sm font-medium bg-[#f5f5f7] dark:bg-[#242426] text-[#1d1d1f] dark:text-[#f5f5f7] border border-[#e0e0e0] dark:border-[#38383a] hover:bg-[#e0e0e0] dark:hover:bg-[#2e2e32] transition-colors cursor-pointer"
+      >
+        Load Example
+      </button>
+      <button
+        type="button"
+        id="btn-clear"
+        class="px-4 py-1.5 rounded-full text-xs sm:text-sm font-medium text-[#7a7a7a] dark:text-[#8e8e93] hover:text-[#1d1d1f] dark:hover:text-[#f5f5f7] hover:bg-[#f5f5f7] dark:hover:bg-[#242426] transition-colors cursor-pointer"
+      >
+        Clear
+      </button>
+    </div>
+  </div>
+
+  <!-- Interactive Inputs & Controls Grid -->
+  <div class="py-6 space-y-6">
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+      <!-- Input Controls Column -->
+      <div class="lg:col-span-6 space-y-4">
+        <!-- Optional Selectors (Bases, Operations, Bit Widths) -->
+        <div class="flex flex-wrap items-center gap-3">
+          {tool.inputConfig.hasBaseSelector && (
+            <div class="flex-1 min-w-[140px]">
+              <label for="select-base" class="block text-xs font-semibold uppercase tracking-wider text-[#7a7a7a] dark:text-[#8e8e93] mb-1.5">
+                From Radix (Base)
+              </label>
+              <select
+                id="select-base"
+                class="w-full bg-[#f5f5f7] dark:bg-[#1c1c1e] border border-[#e0e0e0] dark:border-[#2c2c2e] rounded-xl px-3 py-2 text-sm font-medium text-[#1d1d1f] dark:text-[#f5f5f7] focus:outline-none focus:border-[#0066cc] dark:focus:border-[#2997ff]"
+              >
+                {[2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 20, 26, 32, 36].map((b) => (
+                  <option value={b} selected={b === (tool.inputConfig.defaultBase || 10)}>
+                    Base {b} {b === 2 ? '(Binary)' : b === 8 ? '(Octal)' : b === 10 ? '(Decimal)' : b === 16 ? '(Hex)' : ''}
+                  </option>
+                ))}
+              </select>
+            </div>
+          )}
+
+          {tool.inputConfig.hasTargetBaseSelector && (
+            <div class="flex-1 min-w-[140px]">
+              <label for="select-target-base" class="block text-xs font-semibold uppercase tracking-wider text-[#7a7a7a] dark:text-[#8e8e93] mb-1.5">
+                To Radix (Base)
+              </label>
+              <select
+                id="select-target-base"
+                class="w-full bg-[#f5f5f7] dark:bg-[#1c1c1e] border border-[#e0e0e0] dark:border-[#2c2c2e] rounded-xl px-3 py-2 text-sm font-medium text-[#1d1d1f] dark:text-[#f5f5f7] focus:outline-none focus:border-[#0066cc] dark:focus:border-[#2997ff]"
+              >
+                {[2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 20, 26, 32, 36].map((b) => (
+                  <option value={b} selected={b === (tool.inputConfig.defaultTargetBase || 2)}>
+                    Base {b} {b === 2 ? '(Binary)' : b === 8 ? '(Octal)' : b === 10 ? '(Decimal)' : b === 16 ? '(Hex)' : ''}
+                  </option>
+                ))}
+              </select>
+            </div>
+          )}
+
+          {tool.inputConfig.hasBitWidthSelector && (
+            <div class="flex-1 min-w-[140px]">
+              <label for="select-bitwidth" class="block text-xs font-semibold uppercase tracking-wider text-[#7a7a7a] dark:text-[#8e8e93] mb-1.5">
+                Register Width
+              </label>
+              <select
+                id="select-bitwidth"
+                class="w-full bg-[#f5f5f7] dark:bg-[#1c1c1e] border border-[#e0e0e0] dark:border-[#2c2c2e] rounded-xl px-3 py-2 text-sm font-medium text-[#1d1d1f] dark:text-[#f5f5f7] focus:outline-none focus:border-[#0066cc] dark:focus:border-[#2997ff]"
+              >
+                {[4, 8, 12, 16, 24, 32, 48, 64].map((w) => (
+                  <option value={w} selected={w === (tool.inputConfig.defaultBitWidth || 8)}>
+                    {w}-Bit {w === 4 ? '(Nibble)' : w === 8 ? '(Byte)' : w === 16 ? '(Word)' : w === 32 ? '(Dword)' : w === 64 ? '(Qword)' : ''}
+                  </option>
+                ))}
+              </select>
+            </div>
+          )}
+
+          {tool.inputConfig.hasOperationSelector && tool.inputConfig.operations && (
+            <div class="flex-1 min-w-[140px]">
+              <label for="select-operation" class="block text-xs font-semibold uppercase tracking-wider text-[#7a7a7a] dark:text-[#8e8e93] mb-1.5">
+                Operation
+              </label>
+              <select
+                id="select-operation"
+                class="w-full bg-[#f5f5f7] dark:bg-[#1c1c1e] border border-[#e0e0e0] dark:border-[#2c2c2e] rounded-xl px-3 py-2 text-sm font-medium text-[#1d1d1f] dark:text-[#f5f5f7] focus:outline-none focus:border-[#0066cc] dark:focus:border-[#2997ff]"
+              >
+                {tool.inputConfig.operations.map((op) => (
+                  <option value={op.value} selected={op.value === tool.inputConfig.defaultOperation}>
+                    {op.label}
+                  </option>
+                ))}
+              </select>
+            </div>
+          )}
+        </div>
+
+        <!-- Primary Input Field -->
+        <div>
+          <label for="input-primary" class="block text-xs sm:text-sm font-semibold uppercase tracking-wider text-[#1d1d1f] dark:text-[#f5f5f7] mb-2">
+            {tool.inputConfig.primaryLabel}
+          </label>
+          <input
+            type="text"
+            id="input-primary"
+            value={tool.inputConfig.defaultValue || ''}
+            placeholder={tool.inputConfig.primaryPlaceholder}
+            class="w-full bg-[#f5f5f7] dark:bg-[#1c1c1e] border border-[#e0e0e0] dark:border-[#2c2c2e] rounded-2xl px-4 py-3.5 font-mono text-base sm:text-lg text-[#1d1d1f] dark:text-[#f5f5f7] focus:bg-white dark:focus:bg-[#121214] focus:outline-none focus:border-[#0066cc] dark:focus:border-[#2997ff] focus:ring-2 focus:ring-[#0066cc]/15 transition-all shadow-xs"
+            autocomplete="off"
+            spellcheck="false"
+          />
+          {tool.inputConfig.helpText && (
+            <p class="text-xs text-[#7a7a7a] dark:text-[#8e8e93] mt-1.5">{tool.inputConfig.helpText}</p>
+          )}
+        </div>
+
+        <!-- Secondary Input Field (if applicable) -->
+        {tool.inputConfig.hasSecondaryInput && (
+          <div>
+            <label for="input-secondary" class="block text-xs sm:text-sm font-semibold uppercase tracking-wider text-[#1d1d1f] dark:text-[#f5f5f7] mb-2">
+              {tool.inputConfig.secondaryLabel || 'Secondary Operand'}
+            </label>
+            <input
+              type="text"
+              id="input-secondary"
+              value={tool.inputConfig.defaultSecondaryValue || ''}
+              placeholder={tool.inputConfig.secondaryPlaceholder || 'Second value'}
+              class="w-full bg-[#f5f5f7] dark:bg-[#1c1c1e] border border-[#e0e0e0] dark:border-[#2c2c2e] rounded-2xl px-4 py-3.5 font-mono text-base sm:text-lg text-[#1d1d1f] dark:text-[#f5f5f7] focus:bg-white dark:focus:bg-[#121214] focus:outline-none focus:border-[#0066cc] dark:focus:border-[#2997ff] focus:ring-2 focus:ring-[#0066cc]/15 transition-all shadow-xs"
+              autocomplete="off"
+              spellcheck="false"
+            />
+          </div>
+        )}
+
+        <!-- Calculate Trigger Button -->
+        <div class="pt-2">
+          <button
+            type="button"
+            id="btn-calculate"
+            class="w-full py-3.5 rounded-full bg-[#0066cc] text-white font-medium text-base hover:bg-[#0071e3] active:scale-[0.99] transition-all shadow-xs flex items-center justify-center gap-2 cursor-pointer"
+          >
+            <span>Compute Result</span>
+            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+            </svg>
+          </button>
+        </div>
+
+        <!-- Error Feedback Box -->
+        <div id="error-box" class="hidden p-4 rounded-xl bg-red-50 dark:bg-red-950/30 border border-red-200 dark:border-red-900/50 text-red-700 dark:text-red-400 text-xs sm:text-sm leading-relaxed">
+          <span class="font-semibold block mb-0.5">Input Error:</span>
+          <span id="error-message">Invalid input format.</span>
+        </div>
+      </div>
+
+      <!-- Live Results Column -->
+      <div class="lg:col-span-6 space-y-4">
+        <div class="flex items-center justify-between">
+          <h3 class="text-xs sm:text-sm font-semibold uppercase tracking-wider text-[#1d1d1f] dark:text-[#f5f5f7]">
+            Calculated Output
+          </h3>
+          <button
+            type="button"
+            id="btn-copy-result"
+            class="text-xs font-mono font-medium text-[#0066cc] dark:text-[#2997ff] hover:underline flex items-center gap-1 cursor-pointer"
+          >
+            <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+            </svg>
+            <span id="copy-label">Copy Output</span>
+          </button>
+        </div>
+
+        <!-- Primary Output Display Tile -->
+        <div class="p-5 rounded-2xl bg-[#f5f5f7] dark:bg-[#1c1c1e] border border-[#e0e0e0] dark:border-[#2c2c2e] font-mono text-[#1d1d1f] dark:text-[#f5f5f7] space-y-2">
+          <span class="text-xs text-[#7a7a7a] dark:text-[#8e8e93] uppercase tracking-wider block font-sans font-semibold">
+            Primary Representation
+          </span>
+          <div id="output-primary" class="text-xl sm:text-2xl font-bold break-all text-[#0066cc] dark:text-[#2997ff]">
+            Calculating...
+          </div>
+        </div>
+
+        <!-- Secondary Representations Tile Container -->
+        <div id="secondary-outputs-container" class="space-y-2.5 font-mono text-xs sm:text-sm">
+          <!-- Populated by JavaScript -->
+        </div>
+      </div>
+    </div>
+
+    <!-- Step-by-Step Mathematical Derivation Area -->
+    <div class="pt-6 border-t border-[#f0f0f0] dark:border-[#2c2c2e] space-y-3" id="derivation-section">
+      <div class="flex items-center justify-between">
+        <h4 class="font-display font-semibold text-base sm:text-lg text-[#1d1d1f] dark:text-[#f5f5f7]">
+          Step-by-Step Mathematical Proof
+        </h4>
+        <span class="text-xs font-mono font-semibold text-[#0066cc] dark:text-[#2997ff] bg-[#f5f5f7] dark:bg-[#242426] px-2.5 py-1 rounded-md border border-[#e0e0e0] dark:border-[#2c2c2e]">
+          Active Derivation
+        </span>
+      </div>
+      <div
+        id="derivation-output"
+        class="p-5 rounded-2xl bg-[#f5f5f7] dark:bg-[#1c1c1e] border border-[#e0e0e0] dark:border-[#2c2c2e] font-mono text-xs sm:text-sm text-[#1d1d1f] dark:text-[#f5f5f7] overflow-x-auto leading-relaxed whitespace-pre-wrap"
+      >
+        Ready. Enter input above to generate derivation.
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  import { executeCalculation } from '../utils/toolEngine';
+
+  function initWorkbench() {
+    const workbench = document.getElementById('tool-workbench');
+    if (!workbench) return;
+
+    const slug = workbench.getAttribute('data-slug') || '';
+    const engineType = workbench.getAttribute('data-engine') || '';
+    const inputPrimary = document.getElementById('input-primary') as HTMLInputElement | null;
+    const inputSecondary = document.getElementById('input-secondary') as HTMLInputElement | null;
+    const selectBase = document.getElementById('select-base') as HTMLSelectElement | null;
+    const selectTargetBase = document.getElementById('select-target-base') as HTMLSelectElement | null;
+    const selectBitWidth = document.getElementById('select-bitwidth') as HTMLSelectElement | null;
+    const selectOp = document.getElementById('select-operation') as HTMLSelectElement | null;
+    const btnCalculate = document.getElementById('btn-calculate');
+    const btnSample = document.getElementById('btn-sample');
+    const btnClear = document.getElementById('btn-clear');
+    const btnCopy = document.getElementById('btn-copy-result');
+    const copyLabel = document.getElementById('copy-label');
+    const outputPrimary = document.getElementById('output-primary');
+    const secondaryContainer = document.getElementById('secondary-outputs-container');
+    const derivationOutput = document.getElementById('derivation-output');
+    const errorBox = document.getElementById('error-box');
+    const errorMessage = document.getElementById('error-message');
+
+    function calculate() {
+      const val1 = inputPrimary?.value.trim() || '';
+      const val2 = inputSecondary?.value.trim() || '';
+      const base = parseInt(selectBase?.value || workbench?.getAttribute('data-default-base') || '10', 10);
+      const targetBase = parseInt(selectTargetBase?.value || workbench?.getAttribute('data-default-target-base') || '2', 10);
+      const bitWidth = parseInt(selectBitWidth?.value || workbench?.getAttribute('data-default-width') || '8', 10);
+      const op = selectOp?.value || workbench?.getAttribute('data-default-op') || '+';
+
+      if (!val1 && !val2) {
+        if (outputPrimary) outputPrimary.textContent = '—';
+        if (derivationOutput) derivationOutput.textContent = 'Please enter a value above.';
+        if (secondaryContainer) secondaryContainer.innerHTML = '';
+        if (errorBox) errorBox.classList.add('hidden');
+        return;
+      }
+
+      try {
+        const result = executeCalculation({
+          slug,
+          engineType,
+          val1,
+          val2,
+          base,
+          targetBase,
+          bitWidth,
+          op
+        });
+
+        if (errorBox) errorBox.classList.add('hidden');
+
+        if (outputPrimary) {
+          outputPrimary.textContent = result.primaryOutput;
+        }
+
+        if (derivationOutput) {
+          derivationOutput.textContent = result.derivation || 'Derivation complete.';
+        }
+
+        if (secondaryContainer) {
+          secondaryContainer.innerHTML = '';
+          if (result.secondaryOutputs && result.secondaryOutputs.length > 0) {
+            result.secondaryOutputs.forEach((item) => {
+              const card = document.createElement('div');
+              card.className = 'p-3 rounded-xl bg-white dark:bg-[#1c1c1e] border border-[#e0e0e0] dark:border-[#2c2c2e] flex items-center justify-between gap-3';
+              card.innerHTML = `
+                <span class="text-xs text-[#7a7a7a] dark:text-[#8e8e93] font-sans font-medium">${item.label}:</span>
+                <span class="text-sm font-bold text-[#1d1d1f] dark:text-[#f5f5f7] break-all">${item.value}</span>
+              `;
+              secondaryContainer.appendChild(card);
+            });
+          }
+        }
+      } catch (err: any) {
+        if (errorBox && errorMessage) {
+          errorMessage.textContent = err.message || 'Calculation error occurred.';
+          errorBox.classList.remove('hidden');
+        }
+        if (outputPrimary) outputPrimary.textContent = 'Error';
+        if (derivationOutput) derivationOutput.textContent = `Error: ${err.message || 'Invalid input'}`;
+      }
+    }
+
+    inputPrimary?.addEventListener('input', calculate);
+    inputSecondary?.addEventListener('input', calculate);
+    selectBase?.addEventListener('change', calculate);
+    selectTargetBase?.addEventListener('change', calculate);
+    selectBitWidth?.addEventListener('change', calculate);
+    selectOp?.addEventListener('change', calculate);
+    btnCalculate?.addEventListener('click', calculate);
+
+    btnClear?.addEventListener('click', () => {
+      if (inputPrimary) inputPrimary.value = '';
+      if (inputSecondary) inputSecondary.value = '';
+      calculate();
+    });
+
+    btnSample?.addEventListener('click', () => {
+      const defVal = inputPrimary?.getAttribute('placeholder')?.replace(/^e\.g\.\s*/, '') || '42';
+      if (inputPrimary) inputPrimary.value = defVal.split(' ')[0];
+      calculate();
+    });
+
+    btnCopy?.addEventListener('click', () => {
+      const text = outputPrimary?.textContent || '';
+      if (text && text !== '—' && text !== 'Error') {
+        navigator.clipboard.writeText(text).then(() => {
+          if (copyLabel) copyLabel.textContent = 'Copied!';
+          setTimeout(() => {
+            if (copyLabel) copyLabel.textContent = 'Copy Output';
+          }, 2000);
+        });
+      }
+    });
+
+    // Run on initial load
+    calculate();
+  }
+
+  initWorkbench();
+  document.addEventListener('astro:page-load', initWorkbench);
+</script>

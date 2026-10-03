@@ -1,0 +1,461 @@
+---
+import { CATEGORIES } from '../data/categories';
+import { ALL_TOOLS } from '../data/allTools';
+
+const compactToolIndex = ALL_TOOLS.map((t) => ({
+  name: t.name,
+  slug: t.slug,
+  category: t.categoryName,
+  desc: t.shortDesc
+}));
+---
+
+<header class="sticky top-0 z-40 w-full bg-[#ffffff]/90 dark:bg-[#121214]/90 backdrop-blur-md border-b border-[#e0e0e0] dark:border-[#2c2c2e] transition-all">
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
+    <!-- Brand Logo -->
+    <a href="/" class="flex items-center gap-2.5 shrink-0 group focus:outline-none" aria-label="NumForge Home">
+      <img
+        src="/favicon.svg"
+        alt="NumForge Logo"
+        class="w-8 h-8 rounded-lg object-contain group-hover:scale-105 transition-transform"
+        width="32"
+        height="32"
+      />
+      <span class="font-display font-semibold text-lg tracking-tight text-[#1d1d1f] dark:text-[#f5f5f7]">
+        NumForge
+      </span>
+    </a>
+
+    <!-- Desktop Navigation Links -->
+    <nav class="hidden md:flex items-center gap-6 text-[15px] font-medium text-[#1d1d1f] dark:text-[#e5e5ea]">
+      <a href="/" class="hover:text-[#0066cc] dark:hover:text-[#2997ff] transition-colors py-1">
+        Home
+      </a>
+      <a href="/tools/" class="hover:text-[#0066cc] dark:hover:text-[#2997ff] transition-colors py-1">
+        Tools
+      </a>
+      
+      <!-- Categories Dropdown -->
+      <div class="relative group py-1">
+        <button
+          type="button"
+          class="flex items-center gap-1 hover:text-[#0066cc] dark:hover:text-[#2997ff] transition-colors focus:outline-none cursor-pointer"
+          aria-haspopup="true"
+        >
+          <span>Categories</span>
+          <svg class="w-3.5 h-3.5 text-[#7a7a7a] dark:text-[#8e8e93] group-hover:rotate-180 transition-transform duration-200" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+          </svg>
+        </button>
+
+        <!-- Dropdown Menu with 12 Categories -->
+        <div class="absolute left-1/2 -translate-x-1/2 top-full mt-2 w-[460px] bg-white dark:bg-[#1c1c1e] rounded-2xl shadow-xl border border-[#e0e0e0] dark:border-[#38383a] p-3 opacity-0 translate-y-1 invisible group-hover:opacity-100 group-hover:translate-y-0 group-hover:visible transition-all duration-200 z-50">
+          <div class="px-2.5 py-1.5 text-[11px] font-semibold uppercase tracking-wider text-[#7a7a7a] dark:text-[#8e8e93] border-b border-[#f0f0f0] dark:border-[#2c2c2e] mb-2 flex items-center justify-between">
+            <span>12 Core Tool Categories</span>
+            <span class="text-[#0066cc] dark:text-[#2997ff] font-mono">137 Tools</span>
+          </div>
+
+          <div class="grid grid-cols-2 gap-1 max-h-[360px] overflow-y-auto p-0.5">
+            {CATEGORIES.map((cat) => (
+              <a
+                href={`/tools/${cat.slug}/`}
+                class="flex flex-col p-2 rounded-xl text-left hover:bg-[#f5f5f7] dark:hover:bg-[#252528] transition-colors group/item"
+              >
+                <div class="font-medium text-xs sm:text-sm text-[#1d1d1f] dark:text-[#f5f5f7] group-hover/item:text-[#0066cc] dark:group-hover/item:text-[#2997ff] transition-colors flex items-center justify-between">
+                  <span class="truncate">{cat.name}</span>
+                </div>
+                <div class="text-[#7a7a7a] dark:text-[#8e8e93] text-[11px] truncate mt-0.5">
+                  {cat.toolSlugs.length} tools
+                </div>
+              </a>
+            ))}
+          </div>
+
+          <div class="border-t border-[#f0f0f0] dark:border-[#2c2c2e] mt-2 pt-2 px-2 flex items-center justify-between text-xs">
+            <a href="/tools/" class="text-[#0066cc] dark:text-[#2997ff] font-semibold hover:underline">
+              Browse Tools Directory &rarr;
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <a href="/learn/" class="hover:text-[#0066cc] dark:hover:text-[#2997ff] transition-colors py-1">
+        Learn
+      </a>
+      <a href="/about/" class="hover:text-[#0066cc] dark:hover:text-[#2997ff] transition-colors py-1">
+        About
+      </a>
+    </nav>
+
+    <!-- Search Button, Theme Toggle & Explore Tools CTA -->
+    <div class="flex items-center gap-2 sm:gap-2.5">
+      <!-- Search Trigger Button -->
+      <button
+        id="global-search-trigger"
+        type="button"
+        class="inline-flex items-center gap-2 h-9 px-3 rounded-full text-xs sm:text-sm text-[#7a7a7a] dark:text-[#8e8e93] bg-[#f5f5f7] dark:bg-[#1c1c1e] border border-[#e0e0e0] dark:border-[#2c2c2e] hover:bg-white dark:hover:bg-[#252528] hover:border-[#b0b0b5] dark:hover:border-[#38383a] hover:text-[#1d1d1f] dark:hover:text-[#f5f5f7] transition-all focus:outline-none focus:ring-2 focus:ring-[#0066cc]/20 cursor-pointer"
+        aria-label="Search all tools"
+      >
+        <svg class="w-3.5 h-3.5 text-[#7a7a7a] dark:text-[#8e8e93]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+        </svg>
+        <span class="hidden sm:inline">Search tools...</span>
+        <kbd class="hidden sm:inline-block px-1.5 py-0.5 text-[10px] font-mono text-[#7a7a7a] dark:text-[#8e8e93] bg-white dark:bg-[#2c2c2e] border border-[#e0e0e0] dark:border-[#38383a] rounded">
+          /
+        </kbd>
+      </button>
+
+      <!-- Sleek Dark / Light Theme Toggle Button -->
+      <button
+        id="theme-toggle-btn"
+        type="button"
+        class="inline-flex items-center justify-center w-9 h-9 rounded-full text-[#7a7a7a] dark:text-[#8e8e93] bg-[#f5f5f7] dark:bg-[#1c1c1e] border border-[#e0e0e0] dark:border-[#2c2c2e] hover:text-[#1d1d1f] dark:hover:text-[#f5f5f7] hover:bg-white dark:hover:bg-[#252528] transition-all focus:outline-none focus:ring-2 focus:ring-[#0066cc]/20 cursor-pointer"
+        aria-label="Toggle dark and light mode"
+        title="Toggle dark/light mode"
+      >
+        <!-- Sun icon (visible in dark mode) -->
+        <svg id="theme-icon-sun" class="w-4 h-4 hidden text-[#f5f5f7]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+        </svg>
+        <!-- Moon icon (visible in light mode) -->
+        <svg id="theme-icon-moon" class="w-4 h-4 text-[#1d1d1f]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+        </svg>
+      </button>
+
+      <!-- Prominent Explore Tools Button -->
+      <a
+        href="/tools/"
+        class="inline-flex items-center justify-center h-9 px-3.5 sm:px-5 rounded-full text-xs sm:text-sm font-semibold bg-[#0066cc] text-white hover:bg-[#0071e3] shadow-xs hover:shadow transition-all shrink-0"
+      >
+        <span class="hidden sm:inline">Explore Tools</span>
+        <span class="sm:hidden">Explore</span>
+      </a>
+
+      <!-- Mobile Hamburger Toggle -->
+      <button
+        id="mobile-menu-btn"
+        type="button"
+        aria-label="Toggle Navigation Menu"
+        class="md:hidden p-2 rounded-lg text-[#1d1d1f] dark:text-[#f5f5f7] hover:bg-[#f5f5f7] dark:hover:bg-[#1c1c1e] focus:outline-none"
+      >
+        <svg id="menu-icon-open" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
+        </svg>
+        <svg id="menu-icon-close" class="w-5 h-5 hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- Mobile Drawer -->
+  <div id="mobile-menu" class="hidden md:hidden border-t border-[#e0e0e0] dark:border-[#2c2c2e] bg-[#ffffff] dark:bg-[#121214] px-4 pt-3 pb-6 space-y-3 max-h-[80vh] overflow-y-auto">
+    <div class="space-y-1">
+      <a href="/" class="mobile-nav-link block px-3 py-2 rounded-xl text-sm font-medium text-[#1d1d1f] dark:text-[#f5f5f7] hover:bg-[#f5f5f7] dark:hover:bg-[#1c1c1e]">
+        Home
+      </a>
+      <a href="/tools/" class="mobile-nav-link block px-3 py-2 rounded-xl text-sm font-medium text-[#1d1d1f] dark:text-[#f5f5f7] hover:bg-[#f5f5f7] dark:hover:bg-[#1c1c1e]">
+        Tools Directory
+      </a>
+      <a href="/learn/" class="mobile-nav-link block px-3 py-2 rounded-xl text-sm font-medium text-[#1d1d1f] dark:text-[#f5f5f7] hover:bg-[#f5f5f7] dark:hover:bg-[#1c1c1e]">
+        Learn
+      </a>
+      <a href="/about/" class="mobile-nav-link block px-3 py-2 rounded-xl text-sm font-medium text-[#1d1d1f] dark:text-[#f5f5f7] hover:bg-[#f5f5f7] dark:hover:bg-[#1c1c1e]">
+        About
+      </a>
+      <a href="/contact/" class="mobile-nav-link block px-3 py-2 rounded-xl text-sm font-medium text-[#1d1d1f] dark:text-[#f5f5f7] hover:bg-[#f5f5f7] dark:hover:bg-[#1c1c1e]">
+        Contact
+      </a>
+    </div>
+
+    <!-- Mobile Theme Switcher Row -->
+    <div class="pt-2 border-t border-[#f0f0f0] dark:border-[#2c2c2e] flex items-center justify-between px-3 py-2">
+      <span class="text-xs font-semibold uppercase tracking-wider text-[#7a7a7a] dark:text-[#8e8e93]">Theme</span>
+      <button
+        id="mobile-theme-toggle-btn"
+        type="button"
+        class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-medium bg-[#f5f5f7] dark:bg-[#1c1c1e] border border-[#e0e0e0] dark:border-[#2c2c2e] text-[#1d1d1f] dark:text-[#f5f5f7]"
+      >
+        <span id="mobile-theme-label">Toggle Dark Mode</span>
+      </button>
+    </div>
+
+    <div class="pt-2 border-t border-[#f0f0f0] dark:border-[#2c2c2e]">
+      <div class="px-3 py-1 text-[11px] font-semibold uppercase tracking-wider text-[#7a7a7a] dark:text-[#8e8e93]">
+        Categories
+      </div>
+      <div class="grid grid-cols-1 gap-1 pl-1">
+        {CATEGORIES.map((cat) => (
+          <a
+            href={`/tools/${cat.slug}/`}
+            class="mobile-nav-link block px-3 py-1.5 rounded-lg text-xs text-[#333333] dark:text-[#cccccc] hover:bg-[#f5f5f7] dark:hover:bg-[#1c1c1e]"
+          >
+            {cat.name}
+          </a>
+        ))}
+      </div>
+    </div>
+
+    <div class="pt-3">
+      <a
+        href="/tools/"
+        class="w-full inline-flex items-center justify-center py-2.5 rounded-full text-xs font-semibold bg-[#0066cc] text-white"
+      >
+        Explore Tools
+      </a>
+    </div>
+  </div>
+</header>
+
+<!-- Global Fast Tool Search Dialog Modal -->
+<div
+  id="search-dialog-backdrop"
+  class="fixed inset-0 z-50 bg-[#1d1d1f]/40 dark:bg-black/60 backdrop-blur-sm hidden items-start justify-center pt-16 sm:pt-24 px-4 transition-all"
+  role="dialog"
+  aria-modal="true"
+  aria-labelledby="search-dialog-title"
+>
+  <div
+    id="search-dialog-card"
+    class="w-full max-w-2xl bg-white dark:bg-[#1c1c1e] rounded-2xl shadow-2xl border border-[#e0e0e0] dark:border-[#38383a] overflow-hidden flex flex-col max-h-[75vh]"
+  >
+    <!-- Search Input Header -->
+    <div class="p-4 border-b border-[#e0e0e0] dark:border-[#2c2c2e] flex items-center gap-3 bg-[#f5f5f7] dark:bg-[#161618]">
+      <svg class="w-5 h-5 text-[#7a7a7a] dark:text-[#8e8e93] shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+      </svg>
+      <input
+        type="text"
+        id="modal-tool-search-input"
+        placeholder="Type to search (e.g. binary, hex, ASCII, bitwise, IEEE 754, complement, base conversion)..."
+        class="w-full bg-transparent text-base text-[#1d1d1f] dark:text-[#f5f5f7] placeholder-[#7a7a7a] dark:placeholder-[#8e8e93] focus:outline-none"
+        autocomplete="off"
+      />
+      <button
+        id="close-search-dialog"
+        type="button"
+        class="p-1 rounded-md text-[#7a7a7a] dark:text-[#8e8e93] hover:text-[#1d1d1f] dark:hover:text-[#f5f5f7] hover:bg-[#e0e0e0] dark:hover:bg-[#2c2c2e] transition-colors"
+        aria-label="Close search"
+      >
+        <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+        </svg>
+      </button>
+    </div>
+
+    <!-- Live Search Results List -->
+    <div id="modal-search-results" class="overflow-y-auto p-2 divide-y divide-[#f0f0f0] dark:divide-[#242426] flex-1">
+      <!-- Populated via script -->
+    </div>
+
+    <!-- Search Footer -->
+    <div class="px-4 py-2.5 bg-[#f5f5f7] dark:bg-[#161618] border-t border-[#e0e0e0] dark:border-[#2c2c2e] flex items-center justify-between text-xs text-[#7a7a7a] dark:text-[#8e8e93]">
+      <span id="modal-result-count">137 tools available</span>
+      <div class="flex items-center gap-2">
+        <span>Use <kbd class="px-1.5 py-0.5 rounded bg-white dark:bg-[#2c2c2e] border border-[#e0e0e0] dark:border-[#38383a] text-[10px] font-mono">ESC</kbd> to close</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script is:inline define:vars={{ compactToolIndex }}>
+  window.__NUMFORGE_TOOLS__ = compactToolIndex;
+</script>
+
+<script>
+  function setupHeader() {
+    // Theme Toggle Functionality
+    const themeBtn = document.getElementById('theme-toggle-btn');
+    const mobileThemeBtn = document.getElementById('mobile-theme-toggle-btn');
+    const mobileThemeLabel = document.getElementById('mobile-theme-label');
+    const iconSun = document.getElementById('theme-icon-sun');
+    const iconMoon = document.getElementById('theme-icon-moon');
+
+    function syncThemeUI() {
+      const isDark = document.documentElement.classList.contains('dark');
+      if (iconSun && iconMoon) {
+        if (isDark) {
+          iconSun.classList.remove('hidden');
+          iconMoon.classList.add('hidden');
+        } else {
+          iconSun.classList.add('hidden');
+          iconMoon.classList.remove('hidden');
+        }
+      }
+      if (mobileThemeLabel) {
+        mobileThemeLabel.textContent = isDark ? 'Switch to Light' : 'Switch to Dark';
+      }
+    }
+
+    function toggleTheme() {
+      const isCurrentlyDark = document.documentElement.classList.contains('dark');
+      if (isCurrentlyDark) {
+        document.documentElement.classList.remove('dark');
+        document.documentElement.style.colorScheme = 'light';
+        localStorage.setItem('numforge-theme', 'light');
+      } else {
+        document.documentElement.classList.add('dark');
+        document.documentElement.style.colorScheme = 'dark';
+        localStorage.setItem('numforge-theme', 'dark');
+      }
+      syncThemeUI();
+    }
+
+    themeBtn?.addEventListener('click', toggleTheme);
+    mobileThemeBtn?.addEventListener('click', toggleTheme);
+    syncThemeUI();
+
+    // Listen to OS preference changes if user hasn't explicitly set a preference
+    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
+      if (!localStorage.getItem('numforge-theme')) {
+        if (e.matches) {
+          document.documentElement.classList.add('dark');
+          document.documentElement.style.colorScheme = 'dark';
+        } else {
+          document.documentElement.classList.remove('dark');
+          document.documentElement.style.colorScheme = 'light';
+        }
+        syncThemeUI();
+      }
+    });
+
+    // Mobile Hamburger
+    const btn = document.getElementById('mobile-menu-btn');
+    const menu = document.getElementById('mobile-menu');
+    const iconOpen = document.getElementById('menu-icon-open');
+    const iconClose = document.getElementById('menu-icon-close');
+    const links = document.querySelectorAll('.mobile-nav-link');
+
+    if (btn && menu && iconOpen && iconClose) {
+      btn.onclick = () => {
+        const isOpen = !menu.classList.contains('hidden');
+        if (isOpen) {
+          menu.classList.add('hidden');
+          iconOpen.classList.remove('hidden');
+          iconClose.classList.add('hidden');
+        } else {
+          menu.classList.remove('hidden');
+          iconOpen.classList.add('hidden');
+          iconClose.classList.remove('hidden');
+        }
+      };
+
+      links.forEach((l) => {
+        l.onclick = () => {
+          menu.classList.add('hidden');
+          iconOpen.classList.remove('hidden');
+          iconClose.classList.add('hidden');
+        };
+      });
+    }
+
+    // Modal Search Logic
+    const triggerBtn = document.getElementById('global-search-trigger');
+    const backdrop = document.getElementById('search-dialog-backdrop');
+    const closeBtn = document.getElementById('close-search-dialog');
+    const searchInput = document.getElementById('modal-tool-search-input') as HTMLInputElement | null;
+    const resultsContainer = document.getElementById('modal-search-results');
+    const counterEl = document.getElementById('modal-result-count');
+
+    const tools: Array<{ name: string; slug: string; category: string; desc: string }> =
+      (window as any).__NUMFORGE_TOOLS__ || [];
+
+    function openSearchModal() {
+      if (!backdrop || !searchInput) return;
+      backdrop.classList.remove('hidden');
+      backdrop.classList.add('flex');
+      document.body.style.overflow = 'hidden';
+      searchInput.value = '';
+      renderResults('');
+      setTimeout(() => searchInput.focus(), 50);
+    }
+
+    function closeSearchModal() {
+      if (!backdrop) return;
+      backdrop.classList.add('hidden');
+      backdrop.classList.remove('flex');
+      document.body.style.overflow = '';
+    }
+
+    function renderResults(q: string) {
+      if (!resultsContainer || !counterEl) return;
+      const query = q.trim().toLowerCase();
+      let matched = tools;
+
+      if (query) {
+        matched = tools.filter((t) =>
+          t.name.toLowerCase().includes(query) ||
+          t.slug.toLowerCase().includes(query) ||
+          t.category.toLowerCase().includes(query) ||
+          t.desc.toLowerCase().includes(query)
+        );
+      }
+
+      counterEl.textContent = `${matched.length} tool${matched.length === 1 ? '' : 's'} found`;
+
+      if (matched.length === 0) {
+        resultsContainer.innerHTML = `
+          <div class="text-center py-8 text-[#7a7a7a] dark:text-[#8e8e93] text-sm">
+            No tools found for "<span class="text-[#1d1d1f] dark:text-[#f5f5f7] font-medium">${query}</span>".
+          </div>
+        `;
+        return;
+      }
+
+      const displayList = matched.slice(0, 30);
+      resultsContainer.innerHTML = displayList
+        .map(
+          (t) => `
+        <a
+          href="/${t.slug}/"
+          class="flex items-center justify-between p-3 rounded-xl hover:bg-[#f5f5f7] dark:hover:bg-[#252528] transition-colors group text-left"
+        >
+          <div class="pr-3">
+            <div class="flex items-center gap-2 mb-0.5">
+              <span class="text-[10px] font-mono uppercase tracking-wider text-[#7a7a7a] dark:text-[#8e8e93] bg-[#e8e8ed] dark:bg-[#2c2c2e] px-1.5 py-0.5 rounded">
+                ${t.category}
+              </span>
+            </div>
+            <div class="font-medium text-sm text-[#1d1d1f] dark:text-[#f5f5f7] group-hover:text-[#0066cc] dark:group-hover:text-[#2997ff] transition-colors">
+              ${t.name}
+            </div>
+            <div class="text-xs text-[#7a7a7a] dark:text-[#8e8e93] line-clamp-1 mt-0.5">
+              ${t.desc}
+            </div>
+          </div>
+          <span class="text-xs font-semibold text-[#0066cc] dark:text-[#2997ff] group-hover:translate-x-0.5 transition-transform shrink-0">
+            Open &rarr;
+          </span>
+        </a>
+      `
+        )
+        .join('');
+    }
+
+    triggerBtn?.addEventListener('click', openSearchModal);
+    closeBtn?.addEventListener('click', closeSearchModal);
+
+    backdrop?.addEventListener('click', (e) => {
+      if (e.target === backdrop) {
+        closeSearchModal();
+      }
+    });
+
+    searchInput?.addEventListener('input', (e) => {
+      renderResults((e.target as HTMLInputElement).value);
+    });
+
+    window.addEventListener('keydown', (e) => {
+      if ((e.key === '/' || (e.key === 'k' && (e.metaKey || e.ctrlKey))) && document.activeElement !== searchInput) {
+        e.preventDefault();
+        openSearchModal();
+      } else if (e.key === 'Escape' && backdrop && !backdrop.classList.contains('hidden')) {
+        closeSearchModal();
+      }
+    });
+  }
+
+  setupHeader();
+  document.addEventListener('astro:page-load', setupHeader);
+</script>

@@ -1,0 +1,64 @@
+---
+import type { ToolDefinition } from '../data/types';
+
+interface Props {
+  tool: ToolDefinition;
+  index: number;
+}
+
+const { tool, index } = Astro.props;
+const toolUrl = `/${tool.slug}/`;
+---
+
+<div
+  class="relative flex flex-col justify-between p-6 rounded-[20px] bg-white dark:bg-[#161618] border border-[#e0e0e0] dark:border-[#2c2c2e] hover:border-[#b0b0b5] dark:hover:border-[#3a3a3c] hover:shadow-[0_4px_24px_rgba(0,0,0,0.06)] dark:hover:shadow-[0_4px_24px_rgba(0,0,0,0.4)] transition-all duration-200 group"
+  data-category={tool.categorySlug}
+  data-tags={`${tool.engineType},${tool.categorySlug}`}
+  data-name={tool.name.toLowerCase()}
+>
+  <div>
+    <!-- Top Meta -->
+    <div class="flex items-center justify-between gap-2 mb-3">
+      <span class="text-xs font-semibold uppercase tracking-wider text-[#7a7a7a] dark:text-[#8e8e93]">
+        {tool.categoryName}
+      </span>
+      <span class="px-2.5 py-0.5 rounded-full text-[11px] font-medium bg-[#f5f5f7] dark:bg-[#242426] text-[#1d1d1f] dark:text-[#f5f5f7] border border-[#e0e0e0] dark:border-[#38383a]">
+        Hardware-Grade
+      </span>
+    </div>
+
+    <!-- Title -->
+    <h3 class="font-display font-semibold text-xl sm:text-2xl tracking-tight text-[#1d1d1f] dark:text-[#f5f5f7] leading-snug mb-2">
+      <a href={toolUrl} class="focus:outline-none after:absolute after:inset-0 group-hover:text-[#0066cc] dark:group-hover:text-[#2997ff] transition-colors">
+        {tool.name}
+      </a>
+    </h3>
+
+    <!-- Description -->
+    <p class="text-sm sm:text-base text-[#7a7a7a] dark:text-[#8e8e93] leading-relaxed line-clamp-3 mb-5">
+      {tool.shortDesc}
+    </p>
+
+    <!-- Clean Apple-style Formula / Snippet Box -->
+    <div class="mb-5 p-3 rounded-xl bg-[#f5f5f7] dark:bg-[#1f1f22] font-mono text-xs sm:text-sm text-[#1d1d1f] dark:text-[#f5f5f7] border border-[#e0e0e0]/70 dark:border-[#2c2c2e] flex items-center justify-between">
+      <span class="truncate font-medium text-[#333333] dark:text-[#cccccc]">{tool.categoryName} &bull; {tool.engineType}</span>
+      <span class="text-[11px] uppercase font-bold text-[#0066cc] dark:text-[#2997ff] tracking-wider shrink-0 ml-2">0ms</span>
+    </div>
+  </div>
+
+  <!-- Bottom CTA -->
+  <div class="flex items-center justify-between pt-3 border-t border-[#f0f0f0] dark:border-[#2c2c2e]">
+    <div class="flex flex-wrap gap-1.5">
+      <span class="text-xs px-2.5 py-0.5 rounded-md bg-[#f5f5f7] dark:bg-[#242426] text-[#7a7a7a] dark:text-[#8e8e93]">
+        #{tool.categorySlug}
+      </span>
+      <span class="text-xs px-2.5 py-0.5 rounded-md bg-[#f5f5f7] dark:bg-[#242426] text-[#7a7a7a] dark:text-[#8e8e93]">
+        #{tool.engineType}
+      </span>
+    </div>
+
+    <span class="inline-flex items-center gap-1 text-xs sm:text-sm font-semibold text-[#0066cc] dark:text-[#2997ff] group-hover:translate-x-0.5 transition-transform">
+      Open Tool &rarr;
+    </span>
+  </div>
+</div>

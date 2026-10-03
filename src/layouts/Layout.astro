@@ -1,23 +1,145 @@
+---
+import '../styles/global.css';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+
+interface Props {
+  title?: string;
+  description?: string;
+  keywords?: string;
+  canonical?: string;
+  image?: string;
+  type?: 'website' | 'article';
+  schema?: Record<string, any>;
+  theme?: 'light' | 'parchment' | 'dark';
+}
+
+const {
+  title = 'NumForge — Number Systems & Digital Electronics Tools',
+  description = 'Precision online tools for binary conversions, 2’s complement, digital logic simulation, bitwise calculations, and IEEE-754 floating-point analysis. Free, fast, and 100% private.',
+  keywords = 'decimal to binary conversion, convert decimal to binary, binary to decimal converter, hex to decimal, binary to hex, twos complement calculator, 1s complement, binary addition, binary calculator, ieee 754 converter, gray code converter, bcd converter, logic gates simulator, bit shift calculator, number system cheat sheet, base converter',
+  canonical = Astro.url.href,
+  image = 'https://numforge.online/og-image.svg',
+  type = 'website',
+  schema,
+  theme = 'light'
+} = Astro.props;
+
+const siteUrl = 'https://numforge.online';
+const canonicalUrl = new URL(Astro.url.pathname, siteUrl).href;
+
+const defaultSchema = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'WebSite',
+      '@id': `${siteUrl}/#website`,
+      'name': 'NumForge',
+      'url': siteUrl,
+      'description': description,
+      'potentialAction': {
+        '@type': 'SearchAction',
+        'target': `${siteUrl}/?q={search_term_string}`,
+        'query-input': 'required name=search_term_string'
+      }
+    },
+    {
+      '@type': 'Organization',
+      '@id': `${siteUrl}/#organization`,
+      'name': 'NumForge',
+      'url': siteUrl,
+      'logo': {
+        '@type': 'ImageObject',
+        'url': `${siteUrl}/favicon.svg`
+      },
+      'sameAs': []
+    }
+  ]
+};
+
+const structuredData = schema || defaultSchema;
+
+const bgClass = theme === 'dark' ? 'bg-[#272729] text-white' : theme === 'parchment' ? 'bg-[#f5f5f7] dark:bg-[#121214] text-[#1d1d1f] dark:text-[#f5f5f7]' : 'bg-[#ffffff] dark:bg-[#000000] text-[#1d1d1f] dark:text-[#f5f5f7]';
+---
+
 <!doctype html>
 <html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<meta name="viewport" content="width=device-width" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro Basics</title>
-	</head>
-	<body>
-		<slot />
-	</body>
-</html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    
+    <!-- Instant Anti-FOUC Theme Initialization -->
+    <script is:inline>
+      (function () {
+        try {
+          const stored = localStorage.getItem('numforge-theme');
+          const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+          if (stored === 'dark' || (!stored && prefersDark)) {
+            document.documentElement.classList.add('dark');
+            document.documentElement.style.colorScheme = 'dark';
+          } else {
+            document.documentElement.classList.remove('dark');
+            document.documentElement.style.colorScheme = 'light';
+          }
+        } catch (e) {}
+      })();
+    </script>
+    <!-- Favicons & Web App Manifest -->
+    <link rel="icon" type="image/png" href="/favicon-96x96.png" sizes="96x96" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="shortcut icon" href="/favicon.ico" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+    <meta name="apple-mobile-web-app-title" content="NumForge" />
+    <link rel="manifest" href="/site.webmanifest" />
+    <meta name="generator" content={Astro.generator} />
+    <link rel="canonical" href={canonicalUrl} />
+    <link rel="sitemap" href="/sitemap.xml" />
+    <link rel="sitemap" href="/sitemap-index.xml" />
 
-<style>
-	html,
-	body {
-		margin: 0;
-		width: 100%;
-		height: 100%;
-	}
-</style>
+    <!-- Google Fonts: Inter & JetBrains Mono as SF Pro / Monospace fallbacks -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- SEO Meta Tags -->
+    <title>{title}</title>
+    <meta name="title" content={title} />
+    <meta name="description" content={description} />
+    <meta name="keywords" content={keywords} />
+    <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" />
+    <meta name="author" content="NumForge Engineering Team" />
+    <meta name="theme-color" content="#ffffff" />
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content={type} />
+    <meta property="og:url" content={canonicalUrl} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={image} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="NumForge Number System and Digital Electronics Tools" />
+    <meta property="og:site_name" content="NumForge" />
+    <meta property="og:locale" content="en_US" />
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:url" content={canonicalUrl} />
+    <meta property="twitter:title" content={title} />
+    <meta property="twitter:description" content={description} />
+    <meta property="twitter:image" content={image} />
+
+    <!-- JSON-LD Structured Data -->
+    <script type="application/ld+json" set:html={JSON.stringify(structuredData)} />
+  </head>
+  <body class={`${bgClass} antialiased selection:bg-[#0066cc] selection:text-white min-h-screen flex flex-col font-sans text-base`}>
+    <Header />
+    <main class="flex-1 w-full" id="main-content">
+      <slot />
+    </main>
+    <Footer />
+  </body>
+</html>
