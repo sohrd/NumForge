@@ -1,3 +1,5 @@
+import { whoInventedBinaryArticle } from './articles/whoInventedBinary';
+
 export interface ArticleFaq {
   question: string;
   answer: string;
@@ -12,18 +14,22 @@ export interface ArticleDefinition {
   metaTitle: string;
   metaDesc: string;
   summary: string;
-  whatIs: string;
-  howItWorks: string;
-  formula: string;
-  stepByStepExample: string;
-  rules: string[];
-  applications: string[];
-  mistakes: string[];
+  whatIs?: string;
+  howItWorks?: string;
+  formula?: string;
+  stepByStepExample?: string;
+  rules?: string[];
+  applications?: string[];
+  mistakes?: string[];
   faqs: ArticleFaq[];
   relatedToolSlugs: string[];
+  contentHtml?: string;
+  datePublished?: string;
+  dateModified?: string;
 }
 
 export const ARTICLES: ArticleDefinition[] = [
+  whoInventedBinaryArticle,
   {
     slug: 'how-to-convert-decimal-to-hexadecimal',
     title: 'How to convert decimal to hexadecimal?',
